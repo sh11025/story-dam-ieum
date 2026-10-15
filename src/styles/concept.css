@@ -1,0 +1,2326 @@
+/* Approved concept layout. Illustrations are shared through StoryWorld.tsx. */
+:root {
+  --color-primary: #287271;
+  --color-background: #fff;
+  --color-background-soft: #f2f8f7;
+  --color-brown: #c47a3a;
+  --color-beige: #f5e6d3;
+  --color-brown-dark: #5a3a24;
+  --content-width: 1800px;
+  --ui-radius: 6px;
+  --ui-border: #c6dfe0;
+  --ui-shadow: 0 2px 7px #235b6010;
+  --dark: #164f60;
+  --border: var(--ui-border);
+  font-synthesis: weight;
+  background: var(--color-background-soft);
+}
+body {
+  background: linear-gradient(115deg, #f2f8f7, #f8fbfc);
+}
+.app-header {
+  height: 64px;
+  padding: 0 max(28px, calc((100vw - var(--content-width)) / 2));
+  gap: 28px;
+}
+.brand {
+  font-size: 19px;
+  letter-spacing: -0.4px;
+}
+.brand .dami {
+  height: 39px;
+  width: 39px;
+}
+.main-nav {
+  gap: 44px;
+}
+.main-nav a {
+  font-size: 14px;
+}
+.header-actions {
+  gap: 17px;
+}
+.local-badge {
+  font-size: 11px;
+}
+.icon-button {
+  width: 34px;
+  height: 34px;
+}
+.outer-container {
+  max-width: var(--content-width);
+  padding: 26px 0 0;
+  width: calc(100% - 56px);
+  min-height: calc(100vh - 125px);
+}
+.main-container {
+  max-width: var(--content-width);
+  width: calc(100% - 56px);
+  padding: 12px 0 0;
+  margin: auto;
+}
+.app-footer {
+  padding: 17px max(28px, calc((100vw - var(--content-width)) / 2));
+  font-size: 11px;
+}
+.main-container > .page-title {
+  margin: 0 0 12px;
+  min-height: 30px;
+  align-items: center;
+}
+.page-title h1 {
+  font-size: 21px;
+  letter-spacing: -0.6px;
+  margin: 0;
+}
+.main-container > .page-title .eyebrow,
+.main-container > .page-title p {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+.page-title > .button {
+  min-height: 34px;
+  padding: 7px 13px;
+  font-size: 12px;
+}
+.workspace,
+.two-column,
+.editor-layout {
+  grid-template-columns: minmax(0, 73fr) minmax(280px, 27fr);
+  gap: 20px;
+}
+.panel {
+  border-radius: var(--ui-radius);
+  border-color: var(--ui-border);
+  box-shadow: none;
+}
+.panel-body {
+  padding: 20px 24px;
+}
+.panel-body h2 {
+  font-size: 19px;
+  margin-bottom: 16px;
+}
+.side-panel {
+  border-radius: var(--ui-radius);
+  padding: 20px;
+  background: linear-gradient(130deg, #eef8fa, #f7fbfa);
+  border: 1px solid var(--ui-border);
+}
+.helper-title {
+  border-bottom: 0;
+  padding: 0;
+  margin: 0 0 17px;
+  gap: 14px;
+}
+.helper-title .dami {
+  width: 85px;
+  height: 88px;
+  flex-shrink: 0;
+}
+.helper-title h3 {
+  font-size: 18px;
+  font-weight: 800;
+}
+.helper-title .eyebrow {
+  font-size: 11px;
+  letter-spacing: 0;
+  line-height: 1.7;
+}
+.side-panel p,
+.side-panel li {
+  font-size: 14px;
+  line-height: 1.8;
+}
+.side-panel h4 {
+  font-size: 15px;
+  margin-top: 18px;
+}
+.soft-card {
+  border-radius: 5px;
+  padding: 14px;
+  margin: 15px 0;
+}
+.soft-card b {
+  font-size: 14px;
+}
+.soft-card p {
+  font-size: 13px;
+}
+.soft-card small {
+  font-size: 12px;
+}
+.tabs {
+  padding: 0 6px;
+  gap: 5px;
+  background: #f4f9fa;
+  overflow-x: auto;
+}
+.tabs button {
+  font-size: 14px;
+  min-height: 43px;
+  padding: 10px 21px;
+  border-radius: 4px 4px 0 0;
+  font-weight: 700;
+}
+.tabs button.active {
+  background: var(--color-primary);
+  color: white;
+  border-color: var(--color-primary);
+}
+.field {
+  gap: 7px;
+  margin-bottom: 14px;
+}
+.field > label,
+.field > span {
+  font-size: 14px;
+  color: #315b67;
+  font-weight: 700;
+}
+.field input,
+.field textarea,
+.limit-field input {
+  font-size: 14px;
+  line-height: 1.7;
+  padding: 10px 12px;
+  border-color: #d4e1e5;
+  border-radius: 4px;
+}
+.field input {
+  height: 42px;
+}
+.field textarea {
+  min-height: 74px;
+}
+.field input::placeholder,
+.field textarea::placeholder,
+.letter-editor::placeholder {
+  font-size: 14px;
+  color: #677c80;
+}
+.form-grid {
+  gap: 18px;
+}
+.check-field {
+  font-size: 13px;
+}
+.check-field input {
+  width: 16px;
+  height: 16px;
+}
+.button {
+  font-size: 14px;
+  border-radius: 4px;
+  min-height: 40px;
+  padding: 9px 18px;
+  background: linear-gradient(#2c7e80, #216f73);
+  border-color: #25797d;
+}
+.button.secondary {
+  background: #fff;
+  color: #266b76;
+  border-color: #bdd8dd;
+}
+.button.small {
+  font-size: 12px;
+}
+.text-button {
+  font-size: 13px;
+  color: #316d78;
+}
+.notice {
+  font-size: 13px;
+  border-radius: 4px;
+}
+.fine-print {
+  font-size: 12px;
+  line-height: 1.75;
+}
+.guide-list {
+  margin-bottom: 18px;
+}
+.save-bar {
+  padding: 12px 2px 0;
+  font-size: 12px;
+}
+.save-bar .button {
+  font-size: 13px;
+  min-height: 36px;
+}
+.page-actions {
+  padding-top: 14px;
+  margin-top: 15px;
+}
+.question-heading {
+  gap: 16px;
+}
+.question-heading .field {
+  margin-bottom: 12px;
+}
+.question-heading .limit-field {
+  width: 126px;
+  font-size: 12px;
+  margin-bottom: 12px;
+}
+.letter-editor {
+  font-size: 16px;
+  line-height: 1.95;
+  padding: 20px;
+  border-color: #d4e1e5;
+  min-height: clamp(245px, calc(100vh - 600px), 490px);
+}
+.editor-foot {
+  font-size: 12px;
+  margin: 9px 0 12px;
+}
+.side-panel > .text-button {
+  margin: 6px 0;
+}
+.side-divider {
+  margin: 15px 0;
+}
+.comparison p {
+  font-size: 13px;
+}
+.question-small {
+  font-size: 19px;
+}
+.section-heading > span {
+  font-size: 12px;
+}
+.work-header {
+  border: 0;
+  background: white;
+}
+.bridge {
+  height: 158px;
+  background: #eef8f8;
+  border-bottom: 1px solid #a7d3d6;
+}
+.bridge-title {
+  top: 12px;
+  left: max(28px, calc((100vw - var(--content-width)) / 2));
+  right: max(28px, calc((100vw - var(--content-width)) / 2));
+  pointer-events: none;
+}
+.bridge-title > span {
+  font-size: 17px;
+  font-weight: 800;
+  color: #155365;
+  gap: 7px;
+}
+.bridge-title strong {
+  font-size: 24px;
+  padding: 4px 22px;
+  min-width: 92px;
+  box-shadow: inset 0 1px #90bec1;
+  border: 1px solid #1f656d;
+}
+.bridge-scene {
+  max-width: none;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+.story-landscape,
+.world-scenery {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+.landscape {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  bottom: 0;
+}
+.story-bridge {
+  position: absolute;
+  left: 8%;
+  width: 84%;
+  height: 76px;
+  bottom: 19%;
+  overflow: visible;
+}
+.story-landscape.compact .world-scenery {
+  height: 100%;
+  width: 100%;
+}
+.bridge-scene > .story-bridge {
+  height: 62px;
+  bottom: 7px;
+  left: 8%;
+  width: 84%;
+  z-index: 2;
+}
+.story-bridge .log {
+  width: auto;
+  height: auto;
+  border: 0;
+  background: none;
+  box-shadow: none;
+}
+.bridge .bridge-dami img {
+  filter: drop-shadow(0 2px 0 #ffffff30);
+}
+.home {
+  grid-template-columns: 1.05fr 1fr;
+  min-height: calc(100vh - 145px);
+  border-radius: 6px;
+  border-color: #aacfd4;
+  box-shadow: none;
+  background: #eef8fa;
+  position: relative;
+}
+.home-story {
+  min-height: 640px;
+  background: #f2f8f7;
+  overflow: hidden;
+}
+.home-copy {
+  padding: 55px 38px 0;
+  z-index: 2;
+}
+.home-copy .eyebrow {
+  display: none;
+}
+.home-copy h1 {
+  font-size: 36px;
+  white-space: nowrap;
+  line-height: 1.45;
+  letter-spacing: -1.4px;
+}
+.home-copy p {
+  font-size: 19px;
+  line-height: 1.7;
+  margin-top: 14px;
+  max-width: 85%;
+  color: #386c76;
+}
+.home-dami {
+  width: 340px;
+  height: 365px;
+  left: 9%;
+  bottom: 9%;
+  z-index: 3;
+}
+.home-story:after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 90px;
+  background: linear-gradient(90deg, transparent, #eef8fa);
+  pointer-events: none;
+}
+.home-actions {
+  background: linear-gradient(110deg, #eef8fa, #edf7f9);
+  padding: 55px 30px 25px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.section-intro {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+.home-grid {
+  margin: 0;
+  gap: 22px;
+  flex: 0 1 auto;
+}
+.home-card {
+  min-height: 250px;
+  padding: 28px 25px 24px;
+  border-radius: 7px;
+  border-color: #dbe9ec;
+  box-shadow: var(--ui-shadow);
+  position: relative;
+}
+.home-card:hover {
+  transform: translateY(-2px);
+}
+.card-icon {
+  width: 61px;
+  height: 61px;
+  border-radius: 12px;
+  margin-bottom: 18px;
+  background: #e8f7fb !important;
+  color: #0f90ad !important;
+}
+.card-icon svg {
+  width: 36px;
+  height: 36px;
+}
+.home-card:nth-child(3) .card-icon,
+.home-card:nth-child(4) .card-icon {
+  color: #287271 !important;
+  background: #e8f6f5 !important;
+}
+.home-card h3 {
+  font-size: 21px;
+  margin-bottom: 9px;
+  font-weight: 800;
+  color: #185365;
+  line-height: 1.55;
+}
+.home-card p {
+  font-size: 15px;
+  line-height: 1.7;
+  margin-bottom: 0;
+  color: #4a7784;
+}
+.card-bottom {
+  font-size: 0;
+  position: absolute;
+  right: 20px;
+  bottom: 25px;
+}
+.card-bottom svg {
+  width: 20px;
+  height: 20px;
+  color: #236478;
+}
+.privacy-note {
+  margin-top: 22px;
+  font-size: 12px;
+  color: #356779;
+  justify-content: flex-end;
+  line-height: 1.7;
+}
+.land-label {
+  display: none;
+}
+.login-shell {
+  grid-template-columns: 55% 45%;
+  min-height: 100vh;
+}
+.login-story {
+  min-height: 100vh;
+  background: #f2f8f7;
+}
+.login-story > .brand {
+  left: 6.5%;
+  top: 6%;
+  z-index: 3;
+  font-size: 22px;
+}
+.login-story > .brand .dami {
+  height: 47px;
+  width: 45px;
+}
+.login-copy {
+  padding: 16% 6.5% 0;
+}
+.login-copy .eyebrow {
+  display: none;
+}
+.login-copy h1 {
+  font-size: clamp(34px, 3.2vw, 59px);
+  line-height: 1.45;
+  letter-spacing: -2px;
+}
+.login-copy p {
+  font-size: 22px;
+  line-height: 1.6;
+  margin-top: 24px;
+  color: #386b79;
+}
+.login-story .landscape {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.login-dami {
+  width: 40%;
+  height: 41%;
+  left: 8%;
+  bottom: 7%;
+  z-index: 3;
+}
+.story-caption {
+  display: none;
+}
+.login-form {
+  padding: 45px 11%;
+  justify-content: flex-start;
+  align-items: center;
+}
+.login-form-inner {
+  max-width: 520px;
+  width: 100%;
+}
+.login-form-inner > .eyebrow {
+  display: none;
+}
+.login-form h2 {
+  font-size: 36px;
+  font-weight: 800;
+  margin: 0 0 14px;
+}
+.login-form p {
+  font-size: 16px;
+  line-height: 1.65;
+  color: #4f7480;
+}
+.login-form form {
+  margin-top: 27px;
+}
+.login-form .field {
+  margin-bottom: 18px;
+}
+.login-form .field > label {
+  font-size: 16px;
+}
+.login-form input {
+  height: 48px;
+  font-size: 16px;
+}
+.login-form .button {
+  min-height: 46px;
+  font-size: 16px;
+}
+.demo-entry {
+  margin-top: 27px;
+  padding-top: 18px;
+}
+.demo-entry p {
+  font-size: 13px;
+  margin: 10px 0 13px;
+}
+.login-form .fine-print {
+  font-size: 12px;
+  color: #586f64;
+}
+.start-options {
+  margin: 0 0 12px;
+  gap: 7px;
+}
+.start-options button {
+  border-radius: 4px;
+  padding: 7px 14px;
+  font-size: 12px;
+  background: #fff;
+}
+.start-options button.active {
+  background: #e5f2f4;
+  color: #285f6c;
+  border-color: #aed0d6;
+}
+.resume-basic {
+  grid-template-columns: 1fr 140px;
+}
+.photo-box {
+  min-height: 154px;
+}
+.photo-box label {
+  font-size: 13px;
+}
+.template-options {
+  font-size: 14px;
+}
+.resume-thumbnail {
+  margin: 18px auto;
+  height: 150px;
+}
+.side-panel .button-row .button {
+  font-size: 12px;
+}
+.interview-question {
+  font-size: 28px;
+  margin: 23px 0 15px;
+}
+.interview-panel p {
+  font-size: 15px;
+}
+.interview-panel textarea {
+  min-height: clamp(220px, calc(100vh - 590px), 490px);
+  font-size: 16px;
+}
+.question-dots {
+  margin-top: 16px;
+}
+.review-letter {
+  padding-bottom: 15px;
+}
+.review-letter p {
+  font-size: 15px;
+  line-height: 1.85;
+}
+.review-letter small {
+  font-size: 12px;
+}
+.review-check {
+  padding: 8px 0;
+}
+.review-check .text-button {
+  font-size: 12px;
+}
+.completion-banner {
+  position: relative;
+  isolation: isolate;
+  min-height: 140px;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-top: 16px;
+  padding: 18px;
+}
+.completion-banner:before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(#f5faf5, #e3f3ef);
+  z-index: -1;
+}
+.completion-banner .dami {
+  height: 115px;
+  width: 115px;
+}
+.completion-banner h3 {
+  font-size: 21px;
+}
+.completion-banner p {
+  font-size: 14px;
+}
+.support-folder {
+  max-width: none;
+  margin: 18px 0 0;
+  min-height: 560px;
+  border-top: 0;
+  overflow: visible;
+  background: transparent;
+}
+.support-folder > .tabs {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  gap: 0;
+  overflow: visible;
+}
+.support-folder > .tabs button {
+  min-width: 170px;
+  border: 1px solid #abcfd6;
+  border-bottom: 0;
+  background: #edf5f7;
+  border-radius: 8px 8px 0 0;
+  padding: 14px 25px;
+  color: #466b78;
+  font-size: 15px;
+}
+.support-folder > .tabs button.active {
+  background: white;
+  color: #217785;
+  box-shadow: inset 0 3px var(--color-primary);
+  position: relative;
+  z-index: 1;
+}
+.support-folder > .panel-body {
+  border: 1px solid #b6d3d9;
+  background: white;
+  min-height: 490px;
+  border-radius: 0 6px 6px 6px;
+  padding: 24px;
+  margin-top: -1px;
+}
+.notice-item {
+  font-size: 15px;
+  padding: 24px 10px;
+}
+.empty-state p {
+  font-size: 14px;
+}
+.outer-container > .page-title {
+  margin-bottom: 20px;
+}
+.outer-container > .page-title .eyebrow {
+  display: none;
+}
+.outer-container > .page-title p {
+  font-size: 13px;
+}
+dialog {
+  border-radius: 7px;
+  padding: 24px;
+  width: 490px;
+}
+.modal-head h2 {
+  font-size: 21px;
+}
+dialog p {
+  font-size: 14px;
+}
+.provider-tabs button {
+  font-size: 13px;
+}
+@media (min-width: 1600px) {
+  .home-card {
+    min-height: 285px;
+  }
+  .home-dami {
+    width: 375px;
+    height: 400px;
+  }
+  .home-grid {
+    gap: 24px;
+  }
+  .side-panel {
+    padding: 22px;
+  }
+  .bridge {
+    height: 174px;
+  }
+  .home-actions {
+    padding-left: 28px;
+    padding-right: 38px;
+  }
+  .panel-body {
+    padding: 24px;
+  }
+  .letter-editor {
+    min-height: calc(100vh - 610px);
+  }
+}
+@media (min-width: 801px) and (max-height: 820px) {
+  .app-header {
+    height: 58px;
+  }
+  .bridge {
+    height: 128px;
+  }
+  .bridge-title {
+    top: 8px;
+  }
+  .bridge-title > span {
+    font-size: 14px;
+  }
+  .bridge-title strong {
+    font-size: 21px;
+  }
+  .bridge-scene > .story-bridge {
+    height: 53px;
+    bottom: 4px;
+  }
+  .main-container {
+    padding-top: 9px;
+  }
+  .page-title h1 {
+    font-size: 18px;
+  }
+  .main-container > .page-title {
+    margin-bottom: 8px;
+    min-height: 26px;
+  }
+  .panel-body {
+    padding: 16px 18px;
+  }
+  .tabs button {
+    font-size: 13px;
+    min-height: 37px;
+    padding: 8px 15px;
+  }
+  .field {
+    margin-bottom: 11px;
+  }
+  .field > label {
+    font-size: 13px;
+  }
+  .field input {
+    height: 37px;
+  }
+  .field input,
+  .field textarea {
+    font-size: 13px;
+    padding: 8px 10px;
+  }
+  .letter-editor {
+    min-height: 220px;
+    padding: 14px;
+    font-size: 15px;
+  }
+  .question-heading .field,
+  .question-heading .limit-field {
+    margin-bottom: 8px;
+  }
+  .question-heading .limit-field input {
+    height: 37px;
+  }
+  .editor-foot {
+    margin: 7px 0;
+  }
+  .page-actions {
+    margin-top: 10px;
+    padding-top: 10px;
+  }
+  .check-field {
+    font-size: 12px;
+    margin: 7px 0;
+  }
+  .button {
+    min-height: 36px;
+    font-size: 13px;
+    padding: 7px 13px;
+  }
+  .side-panel {
+    padding: 16px;
+  }
+  .helper-title {
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .helper-title .dami {
+    width: 66px;
+    height: 69px;
+  }
+  .helper-title h3 {
+    font-size: 15px;
+  }
+  .helper-title .eyebrow {
+    font-size: 10px;
+  }
+  .side-panel p,
+  .side-panel li {
+    font-size: 12px;
+    line-height: 1.7;
+  }
+  .side-panel h4 {
+    font-size: 14px;
+    margin-top: 14px;
+  }
+  .side-panel .fine-print {
+    font-size: 11px;
+    margin: 10px 0;
+  }
+  .side-panel .field textarea {
+    min-height: 70px;
+  }
+  .soft-card {
+    padding: 12px;
+    margin: 12px 0;
+  }
+  .soft-card p {
+    font-size: 12px;
+  }
+  .side-divider {
+    margin: 12px 0;
+  }
+  .home,
+  .home-story {
+    min-height: calc(100vh - 123px);
+  }
+  .outer-container {
+    padding-top: 18px;
+    min-height: calc(100vh - 112px);
+  }
+  .home-copy {
+    padding: 38px 28px 0;
+  }
+  .home-copy h1 {
+    font-size: 29px;
+    letter-spacing: -1px;
+  }
+  .home-copy p {
+    font-size: 16px;
+  }
+  .home-actions {
+    padding: 33px 24px 20px 15px;
+  }
+  .home-grid {
+    gap: 17px;
+  }
+  .home-card {
+    min-height: 211px;
+    padding: 23px 20px;
+  }
+  .home-card h3 {
+    font-size: 18px;
+  }
+  .home-card p {
+    font-size: 13px;
+  }
+  .card-icon {
+    width: 49px;
+    height: 49px;
+    margin-bottom: 14px;
+  }
+  .card-icon svg {
+    width: 29px;
+    height: 29px;
+  }
+  .home-dami {
+    width: 280px;
+    height: 300px;
+    bottom: 7%;
+  }
+  .privacy-note {
+    font-size: 10px;
+    margin-top: 17px;
+  }
+  .login-copy {
+    padding-top: 17%;
+  }
+  .login-copy h1 {
+    font-size: 42px;
+  }
+  .login-copy p {
+    font-size: 18px;
+  }
+  .login-form h2 {
+    font-size: 29px;
+  }
+  .login-form p {
+    font-size: 14px;
+  }
+  .login-form input {
+    height: 42px;
+    font-size: 14px;
+  }
+  .login-form .field > label {
+    font-size: 14px;
+  }
+  .login-form .button {
+    font-size: 14px;
+    min-height: 40px;
+  }
+  .login-form {
+    padding: 30px 10%;
+  }
+  .login-form .fine-print {
+    font-size: 11px;
+  }
+  .demo-entry {
+    margin-top: 18px;
+  }
+  .login-form form {
+    margin-top: 20px;
+  }
+  .interview-question {
+    font-size: 23px;
+    margin: 16px 0 12px;
+  }
+  .interview-panel p {
+    font-size: 13px;
+  }
+  .interview-panel textarea {
+    min-height: 210px;
+    max-height: 340px;
+  }
+  .review-letter p {
+    font-size: 14px;
+  }
+  .completion-banner {
+    min-height: 125px;
+  }
+  .completion-banner h3 {
+    font-size: 18px;
+  }
+  .completion-banner .dami {
+    height: 95px;
+    width: 95px;
+  }
+  .save-bar {
+    padding-top: 9px;
+  }
+  .app-footer {
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+}
+@media (max-width: 1100px) and (min-width: 801px) {
+  .workspace,
+  .two-column,
+  .editor-layout {
+    grid-template-columns: minmax(0, 70fr) minmax(260px, 30fr);
+    gap: 15px;
+  }
+  .main-nav {
+    gap: 22px;
+  }
+  .home-copy h1 {
+    white-space: normal;
+  }
+  .home-copy p {
+    font-size: 15px;
+  }
+  .home-card h3 {
+    font-size: 17px;
+  }
+  .home-card p {
+    font-size: 12px;
+  }
+  .home-dami {
+    width: 245px;
+    height: 265px;
+  }
+  .login-copy h1 {
+    font-size: 34px;
+  }
+  .login-copy p {
+    font-size: 16px;
+  }
+}
+@media (max-width: 800px) {
+  .app-header {
+    height: 62px;
+    padding: 0 15px;
+    gap: 8px;
+  }
+  .brand {
+    font-size: 15px;
+  }
+  .brand .dami {
+    height: 34px;
+    width: 32px;
+  }
+  .header-actions {
+    gap: 4px;
+  }
+  .main-nav.open {
+    top: 62px;
+  }
+  .outer-container,
+  .main-container {
+    width: calc(100% - 28px);
+    padding-top: 16px;
+  }
+  .outer-container {
+    min-height: calc(100vh - 118px);
+  }
+  .workspace,
+  .two-column,
+  .editor-layout {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+  .bridge {
+    height: 132px;
+  }
+  .bridge-title {
+    left: 15px;
+    right: 15px;
+    top: 9px;
+  }
+  .bridge-title > span {
+    font-size: 11px;
+  }
+  .bridge-title svg {
+    display: none;
+  }
+  .bridge-title strong {
+    min-width: 62px;
+    font-size: 18px;
+    padding: 3px 10px;
+  }
+  .bridge-scene > .story-bridge {
+    height: 47px;
+    bottom: 5px;
+  }
+  .story-landscape.compact .world-scenery {
+    width: 150%;
+    left: -25%;
+  }
+  .main-container > .page-title {
+    display: flex;
+    margin-bottom: 12px;
+    gap: 12px;
+  }
+  .page-title h1 {
+    font-size: 18px;
+  }
+  .page-title > .button {
+    font-size: 11px;
+    white-space: nowrap;
+  }
+  .panel-body {
+    padding: 18px;
+  }
+  .side-panel {
+    padding: 18px;
+  }
+  .tabs button {
+    font-size: 12px;
+    padding: 10px 12px;
+    min-height: 40px;
+  }
+  .helper-title h3 {
+    font-size: 17px;
+  }
+  .field > label {
+    font-size: 13px;
+  }
+  .field input,
+  .field textarea {
+    font-size: 14px;
+  }
+  .home {
+    grid-template-columns: 1fr;
+    min-height: 0;
+  }
+  .home-story {
+    min-height: 430px;
+  }
+  .home-copy {
+    padding: 28px 25px 0;
+  }
+  .home-copy h1 {
+    font-size: 27px;
+    white-space: normal;
+  }
+  .home-copy p {
+    font-size: 14px;
+    max-width: 95%;
+    line-height: 1.7;
+  }
+  .home-dami {
+    left: 6%;
+    bottom: 6%;
+    height: 215px;
+    width: 205px;
+  }
+  .home-story:after {
+    top: auto;
+    height: 30px;
+    width: 100%;
+    background: linear-gradient(transparent, #eef8fa);
+  }
+  .home-actions {
+    padding: 23px 18px 20px;
+  }
+  .home-grid {
+    gap: 14px;
+  }
+  .home-card {
+    padding: 20px 16px;
+    min-height: 205px;
+  }
+  .home-card h3 {
+    font-size: 16px;
+  }
+  .home-card p {
+    font-size: 12px;
+  }
+  .card-icon {
+    height: 47px;
+    width: 47px;
+    margin-bottom: 14px;
+  }
+  .card-icon svg {
+    height: 27px;
+    width: 27px;
+  }
+  .card-bottom {
+    right: 13px;
+    bottom: 16px;
+  }
+  .privacy-note {
+    font-size: 10px;
+    justify-content: center;
+    margin-top: 17px;
+  }
+  .login-shell {
+    grid-template-columns: 1fr;
+  }
+  .login-story {
+    min-height: 520px;
+  }
+  .login-story > .brand {
+    left: 27px;
+    top: 24px;
+    font-size: 16px;
+  }
+  .login-story > .brand .dami {
+    height: 35px;
+    width: 33px;
+  }
+  .login-copy {
+    padding: 98px 27px 0;
+  }
+  .login-copy h1 {
+    font-size: 30px;
+    letter-spacing: -1px;
+  }
+  .login-copy p {
+    font-size: 14px;
+    margin-top: 12px;
+  }
+  .login-dami {
+    height: 215px;
+    width: 205px;
+    left: 7%;
+    bottom: 6%;
+  }
+  .login-form {
+    padding: 36px 27px;
+    justify-content: center;
+  }
+  .login-form h2 {
+    font-size: 28px;
+  }
+  .login-form p {
+    font-size: 14px;
+  }
+  .login-form .button {
+    font-size: 14px;
+    min-height: 43px;
+  }
+  .login-form .field > label {
+    font-size: 14px;
+  }
+  .login-form input {
+    font-size: 14px;
+    height: 43px;
+  }
+  .app-footer {
+    padding: 20px 14px;
+  }
+  .letter-editor {
+    min-height: 300px;
+    font-size: 15px;
+  }
+  .interview-question {
+    font-size: 21px;
+  }
+  .interview-panel p {
+    font-size: 14px;
+  }
+  .interview-panel textarea {
+    min-height: 260px;
+  }
+  .resume-basic {
+    grid-template-columns: 1fr 110px;
+  }
+  .support-folder {
+    min-height: 460px;
+    margin: 15px 0 0;
+  }
+  .support-folder > .tabs button {
+    min-width: 125px;
+    padding: 12px 16px;
+    font-size: 14px;
+  }
+  .support-folder > .panel-body {
+    padding: 16px;
+  }
+  .notice-item {
+    font-size: 13px;
+    padding: 18px 7px;
+  }
+  .review-letter p {
+    font-size: 14px;
+  }
+  .completion-banner h3 {
+    font-size: 17px;
+  }
+  .completion-banner p {
+    font-size: 12px;
+  }
+}
+@media (max-width: 480px) {
+  .brand {
+    font-size: 13px;
+  }
+  .header-actions .icon-button {
+    width: 28px;
+  }
+  .home-copy h1 {
+    font-size: 25px;
+  }
+  .home-story {
+    min-height: 400px;
+  }
+  .home-dami {
+    height: 190px;
+    width: 185px;
+  }
+  .home-card h3 {
+    font-size: 14px;
+  }
+  .home-card p {
+    font-size: 11px;
+  }
+  .home-card {
+    min-height: 195px;
+    padding: 17px 13px;
+  }
+  .home-grid {
+    gap: 11px;
+  }
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .resume-basic {
+    grid-template-columns: 1fr;
+  }
+  .page-title > .button {
+    padding: 6px 9px;
+  }
+  .page-title h1 {
+    font-size: 16px;
+  }
+  .question-heading .field {
+    min-width: 140px;
+  }
+  .question-heading .limit-field {
+    width: 95px;
+  }
+  .bridge-title > span {
+    font-size: 10px;
+  }
+  .helper-title .dami {
+    height: 72px;
+    width: 68px;
+  }
+  .side-panel p,
+  .side-panel li {
+    font-size: 13px;
+  }
+  .side-panel .button-row .button {
+    font-size: 12px;
+  }
+  .completion-banner {
+    padding: 12px;
+    gap: 9px;
+  }
+  .completion-banner .dami {
+    height: 85px;
+    width: 85px;
+  }
+  .completion-banner h3 {
+    font-size: 15px;
+  }
+}
+/* Completion uses the same river and physical bridge pieces as the progress scene. */
+.completion-world {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: 0.55;
+}
+.completion-world > .story-bridge {
+  height: 42px;
+  bottom: 4px;
+}
+.completion-banner > div:not(.completion-world) {
+  background: #ffffffd9;
+  border-radius: 8px;
+  padding: 9px 13px;
+}
+.story-landscape.wide > .story-bridge {
+  height: 95px;
+  bottom: 24%;
+}
+@media (max-width: 800px) {
+  .story-landscape.wide > .story-bridge {
+    height: 66px;
+    bottom: 24%;
+  }
+  .completion-banner > div:not(.completion-world) {
+    padding: 8px;
+  }
+}
+
+/* Screen-family layout pass: keep navigation and work progress compact and distinct. */
+.work-app-header {
+  height: 58px;
+  padding-inline: max(20px, calc((100vw - var(--content-width)) / 2));
+  gap: 16px;
+}
+.work-app-header > .brand {
+  flex: 0 0 190px;
+}
+.work-header {
+  background: #eff8f7;
+}
+.work-header .bridge {
+  height: 76px;
+  border-bottom: 1px solid #b5d7d7;
+}
+.work-header .bridge-title {
+  z-index: 6;
+  top: 4px;
+  left: max(190px, calc((100vw - var(--content-width)) / 2 + 140px));
+  right: max(22px, calc((100vw - var(--content-width)) / 2));
+  padding-right: clamp(108px, 8vw, 160px);
+}
+.work-header .bridge-title > span {
+  font-size: 13px;
+}
+.work-header .bridge-title strong {
+  min-width: 68px;
+  padding: 2px 12px;
+  font-size: 19px;
+}
+.work-header .bridge-scene > .story-bridge {
+  left: 11%;
+  width: 78%;
+  height: 52px;
+  bottom: 0;
+}
+.main-container {
+  padding-top: 8px;
+}
+.main-container > .page-title {
+  margin-bottom: 8px;
+  min-height: 26px;
+}
+.main-container > .workspace {
+  gap: 14px;
+}
+.main-container .panel-body {
+  padding: 16px 19px;
+}
+.main-container .letter-editor {
+  min-height: clamp(280px, calc(100vh - 420px), 560px);
+}
+.main-container .interview-panel textarea {
+  min-height: clamp(260px, calc(100vh - 390px), 540px);
+}
+.home {
+  grid-template-columns: 1.08fr 0.92fr;
+  min-height: calc(100vh - 138px);
+}
+.home-card {
+  min-height: clamp(190px, 24vh, 250px);
+}
+.home-actions {
+  justify-content: flex-start;
+  padding-top: clamp(40px, 5.2vh, 64px);
+}
+.login-copy {
+  position: relative;
+  z-index: 2;
+  padding-top: 12%;
+}
+.login-copy h1 {
+  font-size: clamp(34px, 2.8vw, 52px);
+}
+.login-copy p {
+  margin-top: 14px;
+  font-size: clamp(16px, 1.15vw, 20px);
+  line-height: 1.55;
+}
+.work-header .bridge-title {
+  top: 2px;
+}
+.work-header .bridge-title > span {
+  font-size: 12px;
+}
+.outer-container[data-page='admin'] > .page-title {
+  display: none;
+}
+@media (max-width: 1100px) and (min-width: 801px) {
+  .work-app-header {
+    padding-inline: 16px;
+    gap: 8px;
+  }
+  .work-app-header > .brand {
+    flex-basis: 156px;
+  }
+  .work-app-header .header-actions {
+    gap: 4px;
+  }
+}
+@media (max-width: 800px) {
+  .work-app-header {
+    height: auto;
+    min-height: 62px;
+    flex-wrap: wrap;
+    padding: 7px 12px 0;
+  }
+  .work-app-header > .brand {
+    flex: 1 1 auto;
+  }
+  .work-header .bridge {
+    height: 64px;
+  }
+  .work-header .bridge-title {
+    left: 72px;
+    right: 13px;
+    top: 6px;
+  }
+  .work-header .bridge-title > span {
+    font-size: 10px;
+  }
+  .work-header .bridge-title strong {
+    min-width: 56px;
+    font-size: 15px;
+  }
+  .work-header .bridge-title {
+    padding-right: 76px;
+  }
+  .home {
+    min-height: calc(100vh - 126px);
+  }
+  .home-card {
+    min-height: 175px;
+  }
+}
+
+/* Story Dam Ieum · warm, readable product surfaces */
+:root {
+  --color-primary: #287271;
+  --color-primary-soft: #e8f3f0;
+  --color-bg: #f2f8f7;
+  --color-bg-soft: #f8fbf9;
+  --color-surface: #fff;
+  --color-beige: #f5e6d3;
+  --color-brown: #c47a3a;
+  --color-text: #254849;
+  --color-text-muted: #657971;
+  --radius-sm: 8px;
+  --radius-md: 13px;
+  --radius-lg: 19px;
+  --shadow-soft: 0 5px 18px #315b4b0c;
+  --ui-radius: var(--radius-md);
+  --ui-border: #d4e4de;
+  --ui-shadow: var(--shadow-soft);
+  color: var(--color-text);
+  background: var(--color-bg);
+}
+body {
+  background:
+    radial-gradient(ellipse at 12% 20%, #eef7f2 0, transparent 38%),
+    linear-gradient(135deg, #f2f8f7, #f9fbf8 58%, #eff7f4);
+}
+.page-title h1 {
+  font-size: clamp(23px, 1.55vw, 29px);
+  line-height: 1.4;
+  letter-spacing: -0.7px;
+}
+.page-title .eyebrow {
+  color: #9a7049;
+  font-size: 11px;
+  letter-spacing: 1.2px;
+}
+.panel,
+.support-folder > .panel-body {
+  border: 1px solid #d4e4de;
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-soft);
+}
+.panel-body {
+  padding: 22px 24px;
+}
+.panel-body h2,
+.section-heading h2,
+.section-heading h3 {
+  color: #285c58;
+}
+.side-panel {
+  border: 1px solid #d6e7df;
+  border-radius: var(--radius-md);
+  background: linear-gradient(145deg, #edf7f3, #f8faf5 78%, #fcf5eb);
+  box-shadow: var(--shadow-soft);
+}
+.soft-card,
+.notice {
+  border-radius: var(--radius-sm);
+}
+.soft-card {
+  background: #fbf6ee;
+  border: 1px solid #eadcc9;
+}
+.notice {
+  border: 1px solid #d8e9df;
+  background: #f1f7f1;
+  color: #526c61;
+}
+.notice.error {
+  border-color: #efd5c9;
+  background: #fff6f0;
+}
+.tabs {
+  gap: 4px;
+  padding: 5px;
+  border-radius: 12px;
+  background: #eff6f3;
+}
+.tabs button {
+  min-height: 42px;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  background: transparent;
+  font-weight: 650;
+}
+.tabs button.active {
+  border-color: #dcebe4;
+  border-radius: 9px;
+  background: #fff;
+  color: #236865;
+  box-shadow: 0 2px 7px #315b4b10;
+}
+.support-folder > .tabs {
+  gap: 7px;
+  padding: 0 0 10px;
+}
+.support-folder > .tabs button {
+  min-width: 146px;
+  border: 1px solid #d7e6df;
+  border-radius: 12px;
+  background: #f4f8f5;
+  padding: 11px 19px;
+}
+.support-folder > .tabs button.active {
+  border-color: #c5ddd2;
+  background: #e8f3ef;
+  color: #246b66;
+  box-shadow: inset 0 -2px #287271;
+}
+.support-folder > .panel-body {
+  min-height: 490px;
+  border-radius: var(--radius-md);
+  padding: 24px;
+}
+.field label,
+.check-field,
+.template-options label {
+  color: #385952;
+  font-size: 14px;
+  font-weight: 650;
+}
+.field input,
+.field textarea,
+.limit-field input,
+input[type='text'],
+input[type='email'],
+input[type='password'],
+input[type='url'],
+textarea,
+select {
+  border: 1px solid #ccddd5;
+  border-radius: 8px;
+  background: #fff;
+  color: #254849;
+}
+.field input:focus,
+.field textarea:focus,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  border-color: #74aaa0;
+  box-shadow: 0 0 0 3px #dceee8;
+}
+.field input::placeholder,
+.field textarea::placeholder,
+textarea::placeholder {
+  color: #85958c;
+}
+input[type='checkbox'],
+input[type='radio'] {
+  accent-color: #287271;
+}
+.check-field {
+  border-radius: 9px;
+}
+.button,
+button.button {
+  min-height: 42px;
+  border-radius: 10px;
+  font-weight: 700;
+  box-shadow: 0 2px 5px #235b600b;
+  transition:
+    background-color 120ms ease,
+    border-color 120ms ease,
+    transform 120ms ease;
+}
+.button:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+.button.secondary {
+  border: 1px solid #cfe1d8;
+  background: #f2f7f3;
+  color: #315e57;
+  box-shadow: none;
+}
+.button.secondary:hover:not(:disabled) {
+  background: #e6f1eb;
+}
+.button.danger-button {
+  border-radius: 10px;
+}
+.pill,
+.badge,
+.local-badge {
+  border-radius: 999px;
+}
+.local-badge {
+  background: #edf5ed;
+  color: #607353;
+}
+.icon-button {
+  border-radius: 10px;
+}
+.helper-title {
+  align-items: center;
+  padding: 0 0 14px;
+  border-bottom: 1px solid #dce9e3;
+  margin-bottom: 15px;
+}
+.helper-title .dami {
+  width: 92px;
+  height: 96px;
+  border-radius: 14px;
+  background: linear-gradient(145deg, #f7e9d5, #eef5e8);
+}
+.helper-title .eyebrow {
+  color: #92714f;
+}
+.helper-title h3 {
+  font-size: 19px;
+  font-weight: 750;
+}
+.side-panel h4 {
+  color: #315e57;
+  font-size: 15px;
+}
+.side-panel p,
+.side-panel li {
+  font-size: 14px;
+  line-height: 1.75;
+}
+.side-panel .fine-print,
+.fine-print,
+.field small,
+.caption {
+  color: var(--color-text-muted);
+}
+.soft-card .fine-print {
+  color: #52675d;
+}
+.empty-state {
+  border: 1px dashed #cbded3;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(150deg, #f3f8f4, #fbf7f0);
+}
+.empty-state .dami {
+  border-radius: 18px;
+  background: #f7ecdc;
+}
+.question-heading h2,
+.interview-panel h2 {
+  color: #245d59;
+  font-size: clamp(21px, 1.55vw, 28px);
+  line-height: 1.45;
+}
+.question-heading p {
+  color: #687c72;
+}
+.save-bar {
+  border-color: #d7e6df;
+  background: #f7faf7eb;
+}
+dialog {
+  border: 1px solid #d9e5dc;
+  border-radius: 18px;
+  box-shadow: 0 18px 60px #1a3e3540;
+}
+dialog::backdrop {
+  background: #183d3c55;
+  backdrop-filter: blur(2px);
+}
+.modal-head {
+  border-bottom-color: #e0eae3;
+}
+
+/* A purpose-built river composition: scenery may span the viewport, while each tree, stone and log keeps its own proportions. */
+.work-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.work-header .bridge {
+  height: 76px;
+  overflow: hidden;
+  border-bottom: 1px solid #b7d9d0;
+  background: #e7f3ed;
+}
+.bridge-scene {
+  overflow: hidden;
+}
+.bridge-landscape {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+.bridge-water-art {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.bridge-tree {
+  position: absolute;
+  bottom: 13px;
+  width: 54px;
+  height: 69px;
+}
+.bridge-tree svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.grove-one {
+  left: 16%;
+}
+.grove-two {
+  left: 25%;
+  width: 45px;
+  height: 58px;
+  bottom: 14px;
+}
+.grove-three {
+  right: 23%;
+  width: 43px;
+  height: 55px;
+  bottom: 15px;
+}
+.grove-four {
+  right: 14%;
+}
+.bridge-stone {
+  position: absolute;
+  bottom: 2px;
+  width: 46px;
+  height: 28px;
+}
+.bridge-stone svg {
+  width: 100%;
+  height: 100%;
+}
+.left-stone {
+  left: 2.5%;
+}
+.right-stone {
+  right: 2.5%;
+}
+.bridge-tree,
+.bridge-stone {
+  z-index: 1;
+}
+.work-header .bridge-scene > .story-bridge {
+  left: 11%;
+  bottom: 0;
+  width: 78%;
+  height: 76px;
+  z-index: 2;
+}
+.bridge .bridge-dami img {
+  filter: drop-shadow(0 2px 0 #ffffff35);
+}
+
+/* Work navigation keeps the three tools as independent choices. Only the cover-letter task has its own preparation substeps. */
+.work-app-header {
+  gap: 12px;
+}
+.work-app-header > .brand {
+  flex-basis: 184px;
+}
+.work-navigation {
+  display: flex;
+  align-items: center;
+  flex: 1 1 auto;
+  min-width: 0;
+  gap: 12px;
+}
+.work-task-nav,
+.work-subnav {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  height: 42px;
+  border-radius: 7px;
+  background: #f2f8f7;
+}
+.work-task-nav {
+  flex: 0 0 auto;
+  gap: 3px;
+  padding: 3px;
+}
+.work-task-nav a,
+.work-subnav a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 34px;
+  padding: 0 11px;
+  border-radius: 5px;
+  color: #42636a;
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.work-task-nav a.active {
+  background: #287271;
+  color: #fff;
+}
+.work-subnav {
+  flex: 1 1 auto;
+  justify-content: flex-start;
+  gap: 2px;
+  padding: 3px;
+  background: transparent;
+}
+.work-subnav a {
+  padding-inline: 8px;
+  font-size: 11px;
+}
+.work-subnav a.active {
+  background: #e2f0ed;
+  color: #155d60;
+  box-shadow: inset 0 -2px #287271;
+}
+.work-current-label {
+  flex: 0 0 auto;
+  padding: 6px 9px;
+  border: 1px solid #b7d9d0;
+  border-radius: 999px;
+  background: #f5faf8;
+  color: #155d60;
+  font-size: 11px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+.work-save-status {
+  color: #3d7071;
+  font-size: 11px;
+  white-space: nowrap;
+}
+.bridge-materials {
+  position: absolute;
+  z-index: 3;
+  left: 0.4%;
+  bottom: 1px;
+  width: 7%;
+  height: 58px;
+  overflow: visible;
+}
+.destination-building {
+  position: absolute;
+  z-index: 3;
+  right: 0.3%;
+  bottom: 0;
+  width: 7.8%;
+  height: 65px;
+  overflow: visible;
+}
+.work-header .bridge-scene > .story-bridge {
+  left: 12%;
+  width: 76%;
+}
+@media (max-width: 1100px) and (min-width: 801px) {
+  .work-app-header {
+    gap: 6px;
+  }
+  .work-app-header > .brand {
+    flex-basis: 142px;
+  }
+  .work-navigation {
+    gap: 4px;
+  }
+  .work-task-nav a,
+  .work-subnav a {
+    padding-inline: 6px;
+    font-size: 10px;
+  }
+  .work-save-status,
+  .work-app-header .local-badge {
+    display: none;
+  }
+}
+@media (max-width: 800px) {
+  .work-app-header {
+    padding-bottom: 7px;
+  }
+  .work-navigation {
+    order: 3;
+    flex: 0 0 calc(100% + 24px);
+    width: calc(100% + 24px);
+    margin-inline: -12px;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 3px;
+  }
+  .work-task-nav {
+    height: 36px;
+  }
+  .work-task-nav a {
+    min-height: 30px;
+    padding-inline: 12px;
+  }
+  .work-subnav {
+    flex: 0 0 100%;
+    height: 33px;
+    justify-content: center;
+  }
+  .work-subnav a {
+    min-height: 28px;
+    padding-inline: 10px;
+  }
+  .work-header .bridge-scene > .story-bridge {
+    left: 12%;
+    width: 76%;
+  }
+  .bridge-materials {
+    width: 10%;
+    height: 46px;
+  }
+  .destination-building {
+    width: 9%;
+    height: 51px;
+  }
+}
+@media (max-width: 800px) {
+  .work-header .bridge {
+    height: 64px;
+  }
+  .bridge-tree {
+    width: 44px;
+    height: 57px;
+    bottom: 9px;
+  }
+  .grove-two {
+    width: 37px;
+    height: 48px;
+    bottom: 10px;
+  }
+  .grove-three {
+    width: 36px;
+    height: 46px;
+    bottom: 10px;
+  }
+  .grove-four {
+    right: 12%;
+  }
+  .work-header .bridge-scene > .story-bridge {
+    left: 7%;
+    width: 86%;
+    height: 64px;
+  }
+  .support-folder > .tabs button {
+    min-width: 0;
+    padding-inline: 13px;
+  }
+}
+
+/* A taller, responsive story scene. The SVG landmarks retain their own aspect ratios. */
+.work-header .bridge {
+  height: clamp(136px, 8vw, 158px);
+  overflow: hidden;
+  display: grid;
+  grid-template-rows: 32px minmax(0, 1fr);
+}
+.work-header .bridge-title {
+  position: relative;
+  top: auto;
+  left: auto;
+  right: auto;
+  min-width: 0;
+  padding: 2px clamp(186px, 10vw, 220px) 0
+    calc(max(28px, (100vw - var(--content-width)) / 2) + clamp(220px, 18vw, 340px));
+  padding-right: clamp(186px, 10vw, 220px);
+  z-index: 6;
+  align-self: center;
+  justify-content: flex-start;
+  gap: 14px;
+}
+.work-header .bridge-scene {
+  position: relative;
+  inset: auto;
+  width: 100%;
+  height: auto;
+  min-height: 0;
+  max-width: none;
+  margin: 0;
+  overflow: visible;
+}
+.work-header .bridge-scene > .story-bridge {
+  left: 12%;
+  bottom: 0;
+  width: 76%;
+  height: 100%;
+  overflow: visible;
+}
+.bridge-dami-safe-area {
+  position: absolute;
+  inset: 0 0 1px;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 5;
+}
+.bridge-tree {
+  bottom: 16px;
+}
+.grove-two {
+  bottom: 17px;
+}
+.grove-three {
+  bottom: 17px;
+}
+.bridge-materials {
+  left: 0.5%;
+  bottom: 17px;
+  width: 8.5%;
+  height: 72px;
+}
+.destination-building {
+  right: 0.4%;
+  bottom: 15px;
+  width: 8.5%;
+  height: 98px;
+}
+.bridge .bridge-dami,
+.bridge .bridge-dami.carry,
+.bridge .bridge-dami.build,
+.bridge .bridge-dami.complete {
+  bottom: clamp(34px, 2.3vw, 38px);
+  width: clamp(92px, 7vw, 120px);
+  height: auto;
+  aspect-ratio: 320 / 260;
+  z-index: 5;
+  transition: none;
+}
+.bridge .bridge-dami img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.bridge[data-phase='approaching'] .bridge-dami {
+  transition: left 620ms cubic-bezier(0.22, 0.72, 0.3, 1);
+}
+.log.installing {
+  transform-box: fill-box;
+  animation: bridge-log-install 220ms cubic-bezier(0.2, 0.78, 0.25, 1) var(--install-delay, 0ms)
+    both;
+}
+@keyframes bridge-log-install {
+  0% {
+    opacity: 0;
+    translate: 0 -10px;
+  }
+  72% {
+    opacity: 1;
+    translate: 0 2px;
+  }
+  100% {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+.bridge-phase-celebrating .bridge-dami::after {
+  content: '';
+  position: absolute;
+  top: 4%;
+  right: 5%;
+  width: 13px;
+  aspect-ratio: 1;
+  background: #f6c85f;
+  clip-path: polygon(50% 0, 61% 38%, 100% 50%, 61% 62%, 50% 100%, 39% 62%, 0 50%, 39% 38%);
+  animation: destination-sparkle 550ms ease-in-out infinite alternate;
+}
+@keyframes destination-sparkle {
+  from {
+    opacity: 0.45;
+    scale: 0.8;
+  }
+  to {
+    opacity: 1;
+    scale: 1.08;
+  }
+}
+@media (max-width: 800px) {
+  .work-header .bridge {
+    height: 112px;
+  }
+  .work-header .bridge-scene > .story-bridge {
+    left: 12%;
+    width: 76%;
+    height: 100%;
+  }
+  .bridge-tree {
+    bottom: 11px;
+    width: 40px;
+    height: 52px;
+  }
+  .grove-two {
+    bottom: 12px;
+    width: 35px;
+    height: 45px;
+  }
+  .grove-three {
+    bottom: 12px;
+    width: 34px;
+    height: 44px;
+  }
+  .bridge-materials {
+    bottom: 12px;
+    width: 10%;
+    height: 54px;
+  }
+  .destination-building {
+    bottom: 10px;
+    width: clamp(36px, 10vw, 68px);
+    height: auto;
+    aspect-ratio: 120 / 94;
+  }
+  .work-header .bridge-title {
+    padding-left: calc(28px + clamp(110px, 35vw, 180px));
+    padding-right: 86px;
+  }
+  .bridge .bridge-dami,
+  .bridge .bridge-dami.carry,
+  .bridge .bridge-dami.build,
+  .bridge .bridge-dami.complete {
+    bottom: clamp(8px, 2.4vw, 20px);
+    width: clamp(52px, 9vw, 72px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bridge .bridge-dami,
+  .bridge[data-phase='approaching'] .bridge-dami {
+    transition: none !important;
+  }
+  .log.installing,
+  .bridge-phase-celebrating .bridge-dami::after {
+    animation: none !important;
+  }
+}
+
+/* Support notice content should define its height instead of reserving a large empty panel. */
+.support-folder {
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+.support-folder > .panel-body {
+  min-height: 0;
+}
+
+/* Keep the visible Dami body close in size across the side-panel motion frames.
+   The bridge uses its own deck anchor and intentionally does not inherit this scale. */
+.helper-title .dami {
+  scale: var(--dami-visual-scale, 1);
+  transform-origin: center bottom;
+}
+.home-dami {
+  scale: var(--dami-home-scale, 1);
+  transform-origin: center bottom;
+}

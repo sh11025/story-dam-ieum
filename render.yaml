@@ -1,0 +1,21 @@
+# Render가 이 파일을 읽고 자동으로 서버를 만들어요. (Render → New → Blueprint)
+services:
+  - type: web
+    name: story-dam-ieum
+    runtime: node
+    plan: free
+    region: singapore
+    buildCommand: npm ci --include=dev && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NOTICES_URL
+        sync: false
+      - key: AI_OPENAI_MODEL
+        sync: false
+      - key: AI_GEMINI_MODEL
+        sync: false
+      - key: AI_CLAUDE_MODEL
+        sync: false
