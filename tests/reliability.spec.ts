@@ -266,7 +266,6 @@ test('all main screens meet automated WCAG A and AA checks', async ({ page }) =>
   for (const route of [
     '/login',
     '/application',
-    '/experience',
     '/cover-letter',
     '/resume',
     '/interview',

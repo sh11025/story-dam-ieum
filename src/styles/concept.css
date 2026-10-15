@@ -2324,3 +2324,87 @@ dialog::backdrop {
   scale: var(--dami-home-scale, 1);
   transform-origin: center bottom;
 }
+
+/* 자기소개서 쓰기 화면 옆 '내 경험' 칸 (2026-10-15, 내 경험 단계를 합침) */
+.experience-box {
+  display: grid;
+  gap: 10px;
+}
+.experience-box > .section-heading,
+.experience-editor > .section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 0;
+}
+.experience-box h4 {
+  margin: 0;
+}
+.experience-box .fine-print {
+  margin: 0;
+}
+.experience-box .experience-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  border: 0;
+  margin: 0;
+}
+.experience-box .experience-tabs button {
+  font-size: 12px;
+  padding: 4px 10px;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.experience-editor {
+  background: #ffffffcc;
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius);
+  padding: 12px;
+}
+.experience-editor .field {
+  margin-bottom: 10px;
+}
+.experience-editor .field textarea {
+  min-height: 56px;
+}
+.experience-question {
+  font-size: 13px;
+  margin: 2px 0 10px;
+  color: #315b67;
+}
+.experience-question b {
+  color: #2f7488;
+  margin-right: 4px;
+}
+.experience-editor .button.full {
+  margin-bottom: 4px;
+}
+.experience-reference summary {
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 700;
+  color: #315b67;
+  margin-bottom: 8px;
+}
+.experience-reference .button-row {
+  margin-bottom: 8px;
+}
+
+/* 이력서: 내 경험과 연결된 항목 */
+.resume-row.linked {
+  border-left: 3px solid #8cc3cf;
+  padding-left: 12px;
+}
+.link-pill {
+  margin-left: 8px;
+  vertical-align: middle;
+  background: #e6f3f6;
+  color: #2f6574;
+}
+.link-actions .fine-print {
+  margin: 0 0 4px;
+}

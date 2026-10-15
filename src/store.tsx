@@ -4,6 +4,7 @@ import {
   parseLibrary,
   parseWork,
   serializeLibrary,
+  syncAllResumes,
   uid,
   MAX_LIBRARY_ITEMS as MAX_ITEMS,
   type Library,
@@ -120,7 +121,8 @@ export function WorkProvider({ children }: { children: ReactNode }) {
     setWork((prev) => {
       const next = structuredClone(prev);
       recipe(next);
-      next.resumeSlots[next.resumeMode].data = structuredClone(next.resume);
+      // 경험과 이력서 항목은 서로 연결되어 있어, 어느 쪽을 고쳐도 함께 맞춥니다.
+      syncAllResumes(next);
       if (invalidate && prev.kind === 'cover-letter') next.review = [false, false, false, false];
       return next;
     });
@@ -131,6 +133,7 @@ export function WorkProvider({ children }: { children: ReactNode }) {
       next.resumeSlots[prev.resumeMode].data = structuredClone(prev.resume);
       next.resumeMode = mode;
       next.resume = structuredClone(next.resumeSlots[mode].data);
+      syncAllResumes(next);
       return next;
     });
   const replace = (next: Work) => {
@@ -151,12 +154,18 @@ export function WorkProvider({ children }: { children: ReactNode }) {
     let next = options.work ? structuredClone(options.work) : initialWork();
     if (!options.work && options.copyShared) {
       // 경험과 이력서는 여러 회사에 함께 쓰는 경우가 많아 복사해 둡니다.
+      // 경험 번호를 새로 붙이고, 이력서 항목의 연결도 새 번호로 바꿉니다.
+      const ids = new Map(work.experiences.map((e) => [e.id, uid()]));
+      const relink = (text: string) =>
+        text.replace(/"experienceId":"([^"]+)"/g, (m, id) =>
+          ids.has(id) ? `"experienceId":"${ids.get(id)}"` : m,
+        );
       next = {
         ...next,
-        experiences: structuredClone(work.experiences).map((e) => ({ ...e, id: uid() })),
-        resume: structuredClone(work.resume),
+        experiences: structuredClone(work.experiences).map((e) => ({ ...e, id: ids.get(e.id)! })),
+        resume: JSON.parse(relink(JSON.stringify(work.resume))),
         resumeMode: work.resumeMode,
-        resumeSlots: structuredClone(work.resumeSlots),
+        resumeSlots: JSON.parse(relink(JSON.stringify(work.resumeSlots))),
       };
     }
     const item = newItem(next, options.name ?? '');

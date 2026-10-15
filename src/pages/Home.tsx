@@ -8,7 +8,7 @@ import {
   ShieldCheck,
 } from 'lucide-react';
 import { useWork } from '../store';
-import { type Kind } from '../model';
+import { kindStartPath, type Kind } from '../model';
 import { Dami, Landscape } from '../components';
 import { ApplicationList } from '../components/Applications';
 
@@ -26,7 +26,7 @@ export function Home({ onImport }: { onImport: () => void }) {
         </>
       ),
       icon: FileText,
-      to: '/cover-letter',
+      to: kindStartPath['cover-letter'],
       kind: 'cover-letter',
     },
     {
@@ -52,7 +52,7 @@ export function Home({ onImport }: { onImport: () => void }) {
         </>
       ),
       icon: MessageSquare,
-      to: '/interview',
+      to: kindStartPath.interview,
       kind: 'interview',
     },
     {

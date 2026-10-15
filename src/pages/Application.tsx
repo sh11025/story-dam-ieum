@@ -307,8 +307,11 @@ export function Application() {
                 <ArrowLeft size={16} />
                 홈으로
               </Link>
-              <NextButton disabled={!a.confirmed} onClick={() => nav('/experience')}>
-                내 경험 정리하기
+              <NextButton
+                disabled={!a.confirmed}
+                onClick={() => nav(work.kind === 'interview' ? '/interview' : '/cover-letter')}
+              >
+                {work.kind === 'interview' ? '면접 연습 시작하기' : '자기소개서 쓰기'}
               </NextButton>
             </div>
           </div>

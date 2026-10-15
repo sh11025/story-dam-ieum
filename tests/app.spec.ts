@@ -190,6 +190,7 @@ test('interview summary supports optional questions and applies edits only on re
 }) => {
   await start(page);
   await page.getByRole('button', { name: '면접 준비' }).click();
+  await page.getByRole('link', { name: '면접 연습', exact: true }).click();
   for (let i = 0; i < 5; i++) {
     await page.getByRole('textbox', { name: '내 답변' }).fill(`원래 답변 ${i + 1}`);
     await page.getByRole('button', { name: /^답변 완료/ }).click();
@@ -260,6 +261,7 @@ test('interview summary supports optional questions and applies edits only on re
 test('interview can finish after only the basic questions', async ({ page }) => {
   await start(page);
   await page.getByRole('button', { name: '면접 준비' }).click();
+  await page.getByRole('link', { name: '면접 연습', exact: true }).click();
   for (let i = 0; i < 5; i++) {
     await page.getByRole('textbox', { name: '내 답변' }).fill(`기본 답변 ${i + 1}`);
     await page.getByRole('button', { name: /^답변 완료/ }).click();
@@ -316,6 +318,7 @@ test('Bridge Dami safe area contains the painted bounds of every construction mo
 }) => {
   await start(page);
   await page.getByRole('button', { name: '면접 준비' }).click();
+  await page.getByRole('link', { name: '면접 연습', exact: true }).click();
   const bridge = page.locator('.bridge');
   await expect(bridge).toHaveAttribute('data-progress', '0');
   await expectBridgeLabelClearOfDami(bridge);
@@ -426,8 +429,8 @@ test('real cover letter workflow, selection, state persistence, bridge and SDI r
 }) => {
   await start(page);
   await page.getByRole('button', { name: '자기소개서 작성' }).click();
-  await expect(page).toHaveURL(/cover-letter/);
-  await page.getByRole('link', { name: /지원 정보/ }).click();
+  // 자기소개서는 지원 정보(공고)부터 시작합니다.
+  await expect(page).toHaveURL(/application/);
   await page
     .getByLabel('채용공고 원문')
     .fill(
@@ -440,7 +443,9 @@ test('real cover letter workflow, selection, state persistence, bridge and SDI r
   await expect(page.locator('.bridge')).toHaveAttribute('data-progress', /^(?:[1-9]|[1-9]\d|100)$/);
   const partialLogs = Number(await page.locator('.bridge').getAttribute('data-installed-logs'));
   await expect(page.locator('.bridge .log.installed')).toHaveCount(partialLogs);
-  await page.getByRole('button', { name: '내 경험 정리하기' }).click();
+  await page.getByRole('button', { name: '자기소개서 쓰기' }).click();
+  await expect(page).toHaveURL(/cover-letter/);
+  // '내 경험'은 쓰기 화면 옆 칸에서 바로 정리합니다.
   for (const [label, value] of [
     ['경험 제목', '팀 프로젝트'],
     ['어떤 상황이었나요?', '교내 프로젝트에서 협업했습니다.'],
@@ -449,7 +454,6 @@ test('real cover letter workflow, selection, state persistence, bridge and SDI r
     ['어떤 결과가 있었나요?', '팀의 우선순위 합의에 도움이 되었습니다.'],
   ])
     await page.getByLabel(label, { exact: false }).fill(value);
-  await page.getByRole('button', { name: '자기소개서 작성하기' }).click();
   const body = page.getByLabel('자기소개서 본문');
   await body.fill('저는 실제 경험을 바탕으로 지원했습니다. 사용자 인터뷰를 정리했습니다.');
   await body.focus();
@@ -571,6 +575,7 @@ test('resume multi-row editing, skip, preview, interview records and reduced mot
     .getByRole('link', { name: /면접 준비/ })
     .first()
     .click();
+  await page.getByRole('link', { name: '면접 연습', exact: true }).click();
   await expect(page.getByText('질문 1 / 5', { exact: true })).toBeVisible();
   for (let i = 0; i < 5; i++) {
     await page
@@ -590,24 +595,30 @@ test('resume multi-row editing, skip, preview, interview records and reduced mot
 test('home and header writing menus open their own editors', async ({ page }) => {
   await start(page);
   for (const item of [
-    { card: '자기소개서 작성', route: /cover-letter/, marker: '자기소개서 본문' },
-    { card: '이력서 작성', route: /resume/, marker: '이름' },
-    { card: '면접 준비', route: /interview/, marker: /질문 1 \/ 5/ },
+    // 자기소개서·면접 준비는 지원 정보(공고)부터, 이력서는 바로 시작합니다.
+    { card: '자기소개서 작성', route: /application/, next: '자기소개서 쓰기' },
+    { card: '이력서 작성', route: /resume/, next: '' },
+    { card: '면접 준비', route: /application/, next: '면접 연습 시작하기' },
   ]) {
     await page.getByRole('button', { name: item.card }).click();
     await expect(page).toHaveURL(item.route);
-    if (typeof item.marker === 'string') await expect(page.getByLabel(item.marker)).toBeVisible();
-    else await expect(page.locator('.interview-panel')).toContainText(item.marker);
+    if (item.next) {
+      await expect(page.getByLabel('회사명')).toBeVisible();
+      await expect(page.getByRole('button', { name: item.next })).toBeVisible();
+    } else await expect(page.getByLabel('이름', { exact: false })).toBeVisible();
     await page.goto('/home');
   }
   for (const item of [
-    { label: '자기소개서', route: /cover-letter/, marker: '자기소개서 본문' },
-    { label: '이력서', route: /resume/, marker: '이름' },
-    { label: '면접 준비', route: /interview/, marker: '내 답변' },
+    { label: '자기소개서', route: /application/, current: '현재 작업 · 자기소개서 작성' },
+    { label: '이력서', route: /resume/, current: '현재 작업 · 이력서 작성' },
+    { label: '면접 준비', route: /application/, current: '현재 작업 · 면접 준비' },
   ]) {
-    await page.getByRole('link', { name: new RegExp(item.label) }).click();
+    await page
+      .getByRole('link', { name: new RegExp(item.label) })
+      .first()
+      .click();
     await expect(page).toHaveURL(item.route);
-    await expect(page.getByLabel(item.marker)).toBeVisible();
+    await expect(page.getByText(item.current, { exact: true })).toBeVisible();
   }
 });
 test('local Home Dami runs periodic full-frame motion and returns to idle', async ({ page }) => {
@@ -1091,7 +1102,10 @@ test('independent work progress preserves shared facts and review state across t
   await page.getByRole('button', { name: '명시된 항목 가져오기' }).click();
   await page.getByLabel('필수 지원 정보를 원문과 비교해 확인했어요.').check();
 
-  await page.getByRole('link', { name: '내 경험', exact: true }).click();
+  await page
+    .getByRole('navigation', { name: '자기소개서 준비 단계' })
+    .getByRole('link', { name: '자기소개서' })
+    .click();
   for (const [label, value] of [
     ['경험 제목', '지역 안내 개선 프로젝트'],
     ['어떤 상황이었나요?', '지역 이용자가 안내를 찾기 어려워했습니다.'],
@@ -1110,7 +1124,8 @@ test('independent work progress preserves shared facts and review state across t
   const taskNav = page.getByRole('navigation', { name: '다른 작업으로 이동' });
   await taskNav.getByRole('link', { name: '이력서' }).click();
   await expect(page.getByText('현재 작업 · 이력서 작성', { exact: true })).toBeVisible();
-  await expect(page.locator('.bridge')).toHaveAttribute('data-progress', '0');
+  // 자기소개서에서 정리한 경험이 이력서 '프로젝트·활동'에 자동으로 들어가 4개 중 1개가 이미 채워짐
+  await expect(page.locator('.bridge')).toHaveAttribute('data-progress', '25');
   await page.getByLabel('이름', { exact: false }).fill('김이음');
   await page.getByLabel('연락처', { exact: false }).fill('010-1234-5678');
   await page.getByLabel('이메일', { exact: false }).fill('ieum@example.com');
@@ -1124,7 +1139,9 @@ test('independent work progress preserves shared facts and review state across t
   await expect(page.getByLabel('공유된 지원 정보와 경험')).toContainText('지역 안내 개선 프로젝트');
 
   await taskNav.getByRole('link', { name: '면접 준비' }).click();
+  await expect(page).toHaveURL(/application/);
   await expect(page.getByText('현재 작업 · 면접 준비', { exact: true })).toBeVisible();
+  await page.getByRole('link', { name: '면접 연습', exact: true }).click();
   await expect(page.locator('.bridge')).toHaveAttribute('data-progress', '0');
   await expect(page.locator('.side-panel')).toContainText('한강기획 · 서비스 기획');
   await expect(page.locator('.side-panel')).toContainText('지역 안내 개선 프로젝트');
@@ -1146,6 +1163,7 @@ test('independent work progress preserves shared facts and review state across t
   await expect(page.getByLabel('경험과 역할, 성과가 모두 실제 사실이에요.')).toBeChecked();
 
   await taskNav.getByRole('link', { name: '면접 준비' }).click();
+  await page.getByRole('link', { name: '면접 연습', exact: true }).click();
   await page.reload();
   await expect(page.locator('.bridge')).toHaveAttribute('data-progress', '20');
   await page.getByRole('button', { name: '질문 1 완료', exact: true }).click();
@@ -1307,12 +1325,18 @@ test('direct resume route and browser back/forward retain the selected work cont
 
   const taskNav = page.getByRole('navigation', { name: '다른 작업으로 이동' });
   await taskNav.getByRole('link', { name: '면접 준비' }).click();
+  await expect(page).toHaveURL(/application/);
+  await page.getByRole('link', { name: '면접 연습', exact: true }).click();
   await expect(page).toHaveURL(/interview/);
   await expect(page.locator('.bridge')).toHaveAttribute('data-progress', '0');
+  await page.goBack();
+  await expect(page).toHaveURL(/application/);
+  await expect(page.getByText('현재 작업 · 면접 준비', { exact: true })).toBeVisible();
   await page.goBack();
   await expect(page).toHaveURL(/resume/);
   await expect(page.getByLabel('이름', { exact: false })).toHaveValue('이음 테스트');
   await expect(page.locator('.bridge')).toHaveAttribute('data-progress', '100');
+  await page.goForward();
   await page.goForward();
   await expect(page).toHaveURL(/interview/);
   await expect(page.locator('.bridge')).toHaveAttribute('data-progress', '0');
@@ -1414,7 +1438,6 @@ test('responsive pages, keyboard modal and accessibility', async ({ page }) => {
       '/login',
       '/home',
       '/application',
-      '/experience',
       '/cover-letter',
       '/resume',
       '/interview',

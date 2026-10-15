@@ -19,37 +19,29 @@ import { Dami, BridgeProgress, Modal, Notice } from './components';
 import { AiSettings } from './components/AiSettings';
 import { ApplicationPicker } from './components/Applications';
 import { BackupReminder } from './components/BackupReminder';
-import {
-  Login,
-  Home,
-  Application,
-  Experience,
-  CoverLetter,
-  Resume,
-  Interview,
-  Review,
-  Notices,
-} from './pages';
+import { Login, Home, Application, CoverLetter, Resume, Interview, Review, Notices } from './pages';
 import { NoticeList, markNoticesSeen, useNotices } from './pages/Notices';
 
-const MAIN_MENU = [
+// 작업 메뉴는 각 작업의 첫 화면으로 갑니다. 자기소개서·면접 준비는 지원 정보(공고)부터 시작해요.
+const MAIN_MENU: [string, string, Kind?][] = [
   ['/home', '홈'],
-  ['/cover-letter', '자기소개서'],
-  ['/resume', '이력서'],
-  ['/interview', '면접 준비'],
+  [kindStartPath['cover-letter'], '자기소개서', 'cover-letter'],
+  [kindStartPath.resume, '이력서', 'resume'],
+  [kindStartPath.interview, '면접 준비', 'interview'],
   ['/notices', '공지사항'],
 ];
-const TASK_MENU: [string, Kind][] = [
-  ['/cover-letter', 'cover-letter'],
-  ['/resume', 'resume'],
-  ['/interview', 'interview'],
-];
-const COVER_LETTER_STEPS = [
-  ['/application', '지원 정보'],
-  ['/experience', '내 경험'],
-  ['/cover-letter', '자기소개서'],
-  ['/review', '최종 점검'],
-];
+const TASK_MENU: Kind[] = ['cover-letter', 'resume', 'interview'];
+const TASK_STEPS: Partial<Record<Kind, [string, string][]>> = {
+  'cover-letter': [
+    ['/application', '지원 정보'],
+    ['/cover-letter', '자기소개서'],
+    ['/review', '최종 점검'],
+  ],
+  interview: [
+    ['/application', '지원 정보'],
+    ['/interview', '면접 연습'],
+  ],
+};
 const MAX_FILE_BYTES = 8 * 1024 * 1024;
 
 export default function App() {
@@ -66,7 +58,7 @@ export default function App() {
 
   const isWelcome = path === '/login';
   const dDay = daysUntil(work.application.deadline);
-  const pathKind = kindOfPath(path);
+  const pathKind = kindOfPath(path, work.kind);
   const isWork = pathKind !== null;
   const taskKind: Kind = pathKind ?? 'cover-letter';
   const taskLabel = taskKind === 'interview' ? '면접 준비' : `${kindNames[taskKind]} 작성`;
@@ -76,6 +68,14 @@ export default function App() {
       : taskKind === 'interview'
         ? '면접 준비'
         : '자기소개서 작성';
+
+  /** 작업을 시작하기 전에 작업 종류를 정해 둡니다(지원 정보 화면을 자기소개서·면접이 함께 쓰므로). */
+  const startTask = (kind: Kind) => {
+    if (work.kind !== kind)
+      update((w) => {
+        w.kind = kind;
+      }, false);
+  };
 
   // 화면을 옮기면 현재 작업 종류를 맞추고, 모바일 메뉴를 닫고, 맨 위로 올립니다.
   useEffect(() => {
@@ -118,16 +118,25 @@ export default function App() {
           {isWork ? (
             <div className="work-navigation">
               <nav className="work-task-nav" aria-label="다른 작업으로 이동">
-                {TASK_MENU.map(([to, kind]) => (
-                  <NavLink key={to} to={to} aria-current={taskKind === kind ? 'page' : undefined}>
+                {TASK_MENU.map((kind) => (
+                  <NavLink
+                    key={kind}
+                    to={kindStartPath[kind]}
+                    className={taskKind === kind ? 'active' : ''}
+                    aria-current={taskKind === kind ? 'page' : undefined}
+                    onClick={() => startTask(kind)}
+                  >
                     {kindNames[kind]}
                   </NavLink>
                 ))}
               </nav>
-              {taskKind === 'cover-letter' && (
-                <nav className="work-subnav" aria-label="자기소개서 준비 단계">
-                  {COVER_LETTER_STEPS.map(([to, label]) => (
-                    <NavLink key={to} to={to} end={to === '/cover-letter'}>
+              {TASK_STEPS[taskKind] && (
+                <nav
+                  className="work-subnav"
+                  aria-label={taskKind === 'interview' ? '면접 준비 단계' : '자기소개서 준비 단계'}
+                >
+                  {TASK_STEPS[taskKind]!.map(([to, label]) => (
+                    <NavLink key={to} to={to} end>
                       {label}
                     </NavLink>
                   ))}
@@ -137,8 +146,13 @@ export default function App() {
             </div>
           ) : (
             <nav className={`main-nav ${mobile ? 'open' : ''}`} aria-label="주요 메뉴">
-              {MAIN_MENU.map(([to, label]) => (
-                <NavLink key={to} to={to} className={({ isActive }) => (isActive ? 'active' : '')}>
+              {MAIN_MENU.map(([to, label, kind]) => (
+                <NavLink
+                  key={label}
+                  to={to}
+                  className={({ isActive }) => (isActive ? 'active' : '')}
+                  onClick={() => kind && startTask(kind)}
+                >
                   {label}
                 </NavLink>
               ))}
@@ -199,7 +213,8 @@ export default function App() {
           <Route path="/auth/*" element={<Navigate to="/login" replace />} />
           <Route path="/home" element={<Home onImport={() => fileInput.current?.click()} />} />
           <Route path="/application" element={<Application />} />
-          <Route path="/experience" element={<Experience />} />
+          {/* '내 경험'은 자기소개서 쓰기 화면으로 합쳤어요. 예전 주소로 오면 그 화면으로 보냅니다. */}
+          <Route path="/experience" element={<Navigate to="/cover-letter" replace />} />
           <Route path="/cover-letter" element={<CoverLetter />} />
           <Route path="/resume" element={<Resume />} />
           <Route path="/interview" element={<Interview />} />
@@ -250,7 +265,7 @@ export default function App() {
             className="button full"
             onClick={() => {
               createApplication({ work: pending });
-              nav(kindStartPath[pending.kind]);
+              nav(pending.kind === 'interview' ? '/interview' : kindStartPath[pending.kind]);
               setPending(null);
             }}
           >
@@ -260,7 +275,7 @@ export default function App() {
             className="text-button"
             onClick={() => {
               replace(pending);
-              nav(kindStartPath[pending.kind]);
+              nav(pending.kind === 'interview' ? '/interview' : kindStartPath[pending.kind]);
               setPending(null);
             }}
           >

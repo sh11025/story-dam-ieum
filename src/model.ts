@@ -1,8 +1,20 @@
 import { z } from 'zod';
 
 const text = z.string().max(100000);
-const row = z.object({ id: text, title: text, period: text, detail: text });
+// experienceId: 자기소개서 '내 경험'과 연결된 이력서 항목이면 그 경험의 번호.
+// detailEdited: 연결된 항목의 내용을 이력서에서 직접 고쳤으면 true (경험 내용으로 덮어쓰지 않음).
+const row = z.object({
+  id: text,
+  title: text,
+  period: text,
+  detail: text,
+  experienceId: text.optional(),
+  detailEdited: z.boolean().optional(),
+});
 const sectionNames = ['학력', '경력', '프로젝트·활동', '스킬', '자격·교육', '기타'] as const;
+/** 경험을 넣을 수 있는 이력서 항목 ('none'이면 이력서에 넣지 않음) */
+export const experienceResumeSections = ['프로젝트·활동', '경력', 'none'] as const;
+export type ExperienceResumeSection = (typeof experienceResumeSections)[number];
 export const resumeModeNames = ['new', 'existing', 'organization'] as const;
 export type ResumeMode = (typeof resumeModeNames)[number];
 export const resumeModeLabels: Record<ResumeMode, string> = {
@@ -64,6 +76,8 @@ export const workSchema = z.object({
         action: text,
         result: text,
         selected: z.boolean(),
+        period: text.default(''),
+        resumeSection: z.enum(experienceResumeSections).default('프로젝트·활동'),
       }),
     )
     .max(100),
@@ -104,16 +118,101 @@ export const kindNames: Record<Kind, string> = {
 export const kindStartPath: Record<Kind, string> = {
   'cover-letter': '/application',
   resume: '/resume',
-  interview: '/interview',
+  interview: '/application',
 };
-const COVER_LETTER_PATHS = ['/application', '/experience', '/cover-letter', '/review'];
-/** 화면 주소가 어떤 작업에 속하는지 (작업 화면이 아니면 null) */
-export function kindOfPath(path: string): Kind | null {
+const COVER_LETTER_PATHS = ['/experience', '/cover-letter', '/review'];
+/**
+ * 화면 주소가 어떤 작업에 속하는지 (작업 화면이 아니면 null).
+ * 지원 정보(/application)는 자기소개서와 면접 준비가 함께 쓰는 첫 단계라, 지금 하던 작업을 따릅니다.
+ */
+export function kindOfPath(path: string, current: Kind = 'cover-letter'): Kind | null {
   if (path === '/resume') return 'resume';
   if (path === '/interview') return 'interview';
+  if (path === '/application') return current === 'interview' ? 'interview' : 'cover-letter';
   return COVER_LETTER_PATHS.includes(path) ? 'cover-letter' : null;
 }
 export const uid = () => crypto.randomUUID();
+export const newExperience = (): Work['experiences'][number] => ({
+  id: uid(),
+  title: '',
+  situation: '',
+  role: '',
+  action: '',
+  result: '',
+  selected: true,
+  period: '',
+  resumeSection: '프로젝트·활동',
+});
+
+type Resume = Work['resume'];
+/** 이력서에 들어갈 경험 요약: 내 역할·행동·결과를 한 줄씩 */
+export const experienceSummary = (e: Work['experiences'][number]) =>
+  [e.role, e.action, e.result]
+    .map((v) => v.trim())
+    .filter(Boolean)
+    .join('\n');
+
+/**
+ * 자기소개서 '내 경험'과 이력서 항목(프로젝트·활동/경력)을 맞춥니다.
+ * - 제목이 있는 경험마다 고른 이력서 항목에 한 줄이 생기고, 제목·기간은 항상 같게 유지합니다.
+ * - 이력서 내용은 경험의 역할·행동·결과로 채우되, 이력서에서 직접 고친 항목은 그대로 둡니다.
+ * - 경험을 지우거나 '이력서에 넣지 않음'으로 바꾸면 연결된 줄을 지웁니다(직접 고친 줄은 연결만 끊고 남김).
+ * - 예전 파일에 같은 제목의 줄이 이미 있으면 새로 만들지 않고 그 줄과 연결합니다.
+ */
+export function syncResumeWithExperiences(resume: Resume, experiences: Work['experiences']) {
+  const byId = new Map(experiences.map((e) => [e.id, e]));
+  for (const section of resume.sections)
+    section.rows = section.rows.filter((r) => {
+      if (!r.experienceId) return true;
+      const e = byId.get(r.experienceId);
+      if (e && e.resumeSection !== 'none') return true;
+      if (r.detailEdited) {
+        delete r.experienceId;
+        delete r.detailEdited;
+        return true;
+      }
+      return false;
+    });
+  for (const e of experiences) {
+    if (e.resumeSection === 'none') continue;
+    const target = resume.sections.find((s) => s.name === e.resumeSection)!;
+    let row: Resume['sections'][number]['rows'][number] | undefined;
+    for (const section of resume.sections) {
+      const i = section.rows.findIndex((r) => r.experienceId === e.id);
+      if (i < 0) continue;
+      row = section.rows[i];
+      if (section !== target) {
+        section.rows.splice(i, 1);
+        target.rows.push(row);
+      }
+      break;
+    }
+    if (!row) {
+      if (!e.title.trim() || target.rows.length >= 100) continue;
+      const summary = experienceSummary(e);
+      row = target.rows.find((r) => !r.experienceId && r.title.trim() === e.title.trim());
+      if (row) {
+        row.detailEdited = !!row.detail.trim() && row.detail !== summary;
+        if (!e.period.trim()) e.period = row.period; // 이력서에만 적어 둔 기간은 경험으로 가져옵니다.
+      } else {
+        row = { id: uid(), title: '', period: '', detail: '', detailEdited: false };
+        target.rows.push(row);
+        target.enabled = true;
+      }
+      row.experienceId = e.id;
+    }
+    row.title = e.title;
+    row.period = e.period;
+    if (!row.detailEdited) row.detail = experienceSummary(e);
+  }
+}
+/** 지금 이력서와 저장된 세 가지 이력서(새로 만들기·기존 수정·양식) 모두에 경험 연결을 맞춥니다. */
+export function syncAllResumes(w: Work) {
+  syncResumeWithExperiences(w.resume, w.experiences);
+  for (const mode of resumeModeNames)
+    if (mode !== w.resumeMode) syncResumeWithExperiences(w.resumeSlots[mode].data, w.experiences);
+  w.resumeSlots[w.resumeMode].data = structuredClone(w.resume);
+}
 
 /** 글자 수 세는 방법. 회사마다 기준이 달라 문항별로 고를 수 있어요. */
 export type CountMode = 'chars' | 'noSpace' | 'bytes';
@@ -173,9 +272,7 @@ export const initialWork = (): Work => ({
     deadline: '',
     confirmed: false,
   },
-  experiences: [
-    { id: uid(), title: '', situation: '', role: '', action: '', result: '', selected: true },
-  ],
+  experiences: [newExperience()],
   letters: ['지원동기', '직무 경험', '협업 경험'].map((title) => ({
     id: uid(),
     title,
@@ -369,6 +466,7 @@ export function parseWork(raw: string): Work {
     throw new Error('지원하지 않는 버전이거나 필수 내용이 빠진 .sdi 파일입니다.');
   const data = parsed.data;
   data.resumeSlots[data.resumeMode].data = structuredClone(data.resume);
+  syncAllResumes(data);
   if (data.interviewIndex >= data.interview.length)
     throw new Error('면접 질문 위치가 올바르지 않습니다.');
   if (new Set(data.resume.sections.map((s) => s.name)).size !== 6)

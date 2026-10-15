@@ -13,6 +13,7 @@ import {
   SaveBar,
   NextButton,
 } from '../components';
+import { ExperienceBox } from '../components/ExperienceBox';
 
 export function CoverLetter() {
   const { work, update } = useWork();
@@ -105,12 +106,26 @@ export function CoverLetter() {
     setProposal(null);
     setStatus('수정안을 적용했어요.');
   };
+  /** '내 경험'의 내용을 커서 위치(없으면 맨 끝)에 넣습니다. */
+  const insertExperience = (text: string) => {
+    const at = selection.end > 0 || selection.start > 0 ? selection.end : letter.body.length;
+    const before = letter.body.slice(0, at);
+    const glue = before && !/\s$/.test(before) ? '\n' : '';
+    update((w) => {
+      const l = w.letters.find((x) => x.id === letter.id)!;
+      l.body = before + glue + text + letter.body.slice(at);
+      l.checked = false;
+    });
+    const caret = at + glue.length + text.length;
+    setSelection({ start: caret, end: caret });
+    setStatus('경험 내용을 본문에 넣었어요. 내 말투로 다듬어 주세요.');
+  };
   const count = letterLength(letter);
   const unit = countUnit(letter.countMode);
   return (
     <>
       <PageTitle
-        step="03 · COVER LETTER"
+        step="02 · COVER LETTER"
         title="경험을 나만의 문장으로 이어요."
         description="당신이 직접 겪은 이야기, 당신의 목소리로 들려주세요."
       />
@@ -258,14 +273,18 @@ export function CoverLetter() {
               문항 요구사항과 사실, 글자 수를 확인했어요.
             </CheckField>
             <div className="page-actions">
-              <Link to="/experience" className="text-button">
-                <ArrowLeft size={16} />내 경험
+              <Link to="/application" className="text-button">
+                <ArrowLeft size={16} />
+                지원 정보
               </Link>
               <NextButton onClick={() => nav('/review')}>최종 점검하기</NextButton>
             </div>
           </div>
         </section>
-        <SidePanel title="담이에게 요청하기">
+        <SidePanel title="경험을 보며 써요">
+          <ExperienceBox onInsert={insertExperience} />
+          <div className="side-divider" />
+          <h4>담이에게 요청하기</h4>
           <Field
             label="어떤 도움을 원하시나요?"
             multiline

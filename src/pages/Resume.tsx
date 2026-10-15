@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Plus, Trash2, Upload } from 'lucide-react';
 import { useWork } from '../store';
-import { sharedContext, uid, resumeModeLabels, resumeModeNames } from '../model';
+import { sharedContext, uid, resumeModeLabels, resumeModeNames, type Work } from '../model';
 import { documentReadNotice, readDocument } from '../services';
 import { documentContent } from '../export';
 import { AiAssist } from '../components/AiAssist';
@@ -257,59 +257,123 @@ export function Resume() {
                     </div>
                   ) : (
                     <>
-                      {section.rows.map((row, i) => (
-                        <div className="resume-row" key={row.id}>
-                          <div className="section-heading">
-                            <h3>
-                              {section.name} {i + 1}
-                            </h3>
-                            <button
-                              className="icon-button danger"
-                              aria-label={`${section.name} ${i + 1} 삭제`}
-                              onClick={() =>
-                                update((w) => {
-                                  w.resume.sections.find((s) => s.name === tab)!.rows.splice(i, 1);
-                                })
-                              }
-                            >
-                              <Trash2 size={17} />
-                            </button>
-                          </div>
-                          <div className="form-grid">
+                      {section.rows.map((row, i) => {
+                        const linked = work.experiences.find((e) => e.id === row.experienceId);
+                        /** 이 줄과, 연결된 경험이 있으면 그 경험도 함께 고칩니다. */
+                        const editRow = (
+                          apply: (
+                            r: Work['resume']['sections'][number]['rows'][number],
+                            e: Work['experiences'][number] | undefined,
+                          ) => void,
+                        ) =>
+                          update((w) => {
+                            const r = w.resume.sections.find((s) => s.name === tab)!.rows[i];
+                            apply(
+                              r,
+                              w.experiences.find((e) => e.id === r.experienceId),
+                            );
+                          });
+                        return (
+                          <div className={`resume-row${linked ? ' linked' : ''}`} key={row.id}>
+                            <div className="section-heading">
+                              <h3>
+                                {section.name} {i + 1}
+                                {linked && <span className="pill link-pill">내 경험과 연결됨</span>}
+                              </h3>
+                              <button
+                                className="icon-button danger"
+                                aria-label={`${section.name} ${i + 1} 삭제`}
+                                onClick={() =>
+                                  update((w) => {
+                                    const rows = w.resume.sections.find(
+                                      (s) => s.name === tab,
+                                    )!.rows;
+                                    // 연결된 줄을 지우면 그 경험은 '이력서에 넣지 않기'로 바꿔, 다시 생기지 않게 합니다.
+                                    const e = w.experiences.find(
+                                      (x) => x.id === rows[i].experienceId,
+                                    );
+                                    if (e) e.resumeSection = 'none';
+                                    rows.splice(i, 1);
+                                  })
+                                }
+                              >
+                                <Trash2 size={17} />
+                              </button>
+                            </div>
+                            <div className="form-grid">
+                              <Field
+                                label={`${section.name} 명칭`}
+                                required
+                                value={row.title}
+                                onChange={(v) =>
+                                  editRow((r, e) => {
+                                    r.title = v;
+                                    if (e) e.title = v;
+                                  })
+                                }
+                              />
+                              <Field
+                                label="기간 (선택)"
+                                value={row.period}
+                                onChange={(v) =>
+                                  editRow((r, e) => {
+                                    r.period = v;
+                                    if (e) e.period = v;
+                                  })
+                                }
+                                placeholder="예: 2023.03 – 2024.02"
+                              />
+                            </div>
                             <Field
-                              label={`${section.name} 명칭`}
+                              label="내용 / 주요 업무 및 역할"
                               required
-                              value={row.title}
+                              multiline
+                              value={row.detail}
                               onChange={(v) =>
-                                update((w) => {
-                                  w.resume.sections.find((s) => s.name === tab)!.rows[i].title = v;
+                                editRow((r) => {
+                                  r.detail = v;
+                                  if (r.experienceId) r.detailEdited = true;
                                 })
                               }
                             />
-                            <Field
-                              label="기간 (선택)"
-                              value={row.period}
-                              onChange={(v) =>
-                                update((w) => {
-                                  w.resume.sections.find((s) => s.name === tab)!.rows[i].period = v;
-                                })
-                              }
-                              placeholder="예: 2023.03 – 2024.02"
-                            />
+                            {linked && (
+                              <div className="link-actions">
+                                <p className="fine-print">
+                                  {row.detailEdited
+                                    ? '내용을 이력서에 맞게 직접 고쳤어요. 제목·기간은 계속 경험과 함께 바뀌어요.'
+                                    : '제목·기간·내용이 자기소개서의 ‘내 경험’과 자동으로 맞춰져요.'}
+                                </p>
+                                <div className="button-row">
+                                  {row.detailEdited && (
+                                    <button
+                                      className="text-button small"
+                                      onClick={() =>
+                                        editRow((r) => {
+                                          r.detailEdited = false;
+                                        })
+                                      }
+                                    >
+                                      경험 내용으로 다시 채우기
+                                    </button>
+                                  )}
+                                  <button
+                                    className="text-button small"
+                                    onClick={() =>
+                                      editRow((r, e) => {
+                                        if (e) e.resumeSection = 'none';
+                                        delete r.experienceId;
+                                        delete r.detailEdited;
+                                      })
+                                    }
+                                  >
+                                    연결 끊기
+                                  </button>
+                                </div>
+                              </div>
+                            )}
                           </div>
-                          <Field
-                            label="내용 / 주요 업무 및 역할"
-                            required
-                            multiline
-                            value={row.detail}
-                            onChange={(v) =>
-                              update((w) => {
-                                w.resume.sections.find((s) => s.name === tab)!.rows[i].detail = v;
-                              })
-                            }
-                          />
-                        </div>
-                      ))}
+                        );
+                      })}
                       <button
                         className="button secondary full"
                         disabled={section.rows.length >= 100}
@@ -370,8 +434,8 @@ export function Resume() {
             ) : (
               <p>정리한 경험이 생기면 여기에서 참고할 수 있어요.</p>
             )}
-            <Link className="text-button" to="/experience">
-              경험 내용 살펴보기
+            <Link className="text-button" to="/cover-letter">
+              경험 고치기 (자기소개서 화면)
               <ArrowRight size={14} />
             </Link>
           </section>

@@ -314,3 +314,75 @@ test('failed URL import offers an AI retry once a key is entered', async ({ page
   await expect(page.getByLabel('회사명')).toHaveValue('AI회사');
   await expect(page.getByLabel('마감일 (선택)')).toHaveValue('2026-11-01');
 });
+
+// 2026-10-15: 자기소개서·면접은 공고부터 시작, '내 경험'은 쓰기 화면에 합치고 이력서와 자동 연결
+test('cover letter starts from the posting, experiences sit beside the editor and sync with the resume', async ({
+  page,
+}) => {
+  await noNotices(page);
+  await page.goto('/home');
+  await page.getByRole('button', { name: '자기소개서 작성' }).click();
+  await expect(page).toHaveURL(/application/);
+  const steps = page.getByRole('navigation', { name: '자기소개서 준비 단계' });
+  await expect(steps.getByRole('link')).toHaveText(['지원 정보', '자기소개서', '최종 점검']);
+  await page
+    .getByLabel('채용공고 원문')
+    .fill('회사명: 이음기획\n직무: 서비스 기획\n주요 업무: 사용자 조사\n자격요건: 협업 경험');
+  await page.getByRole('button', { name: '명시된 항목 가져오기' }).click();
+  await page.getByLabel('필수 지원 정보를 원문과 비교해 확인했어요.').check();
+  await page.getByRole('button', { name: '자기소개서 쓰기' }).click();
+  await expect(page).toHaveURL(/cover-letter/);
+
+  const box = page.getByRole('region', { name: '내 경험' });
+  await box.getByLabel('경험 제목').fill('지역 안내 개선');
+  await box.getByLabel('기간 (선택)').fill('2025.03 – 2025.06');
+  await box.getByLabel('내 역할은 무엇이었나요?').fill('사용자 조사를 맡았습니다.');
+  await box.getByLabel('어떤 결과가 있었나요?').fill('문의가 줄었습니다.');
+  await box.getByRole('button', { name: '본문에 넣기' }).click();
+  await expect(page.getByLabel('자기소개서 본문')).toHaveValue(
+    '사용자 조사를 맡았습니다. 문의가 줄었습니다.',
+  );
+
+  // 이력서에 자동으로 생기고, 이력서에서 고친 제목이 경험에도 반영됨
+  await page
+    .getByRole('navigation', { name: '다른 작업으로 이동' })
+    .getByRole('link', { name: '이력서' })
+    .click();
+  await page.getByRole('button', { name: '프로젝트·활동' }).click();
+  await expect(page.getByText('내 경험과 연결됨')).toBeVisible();
+  await expect(page.getByLabel('기간 (선택)')).toHaveValue('2025.03 – 2025.06');
+  await expect(page.getByLabel('내용 / 주요 업무 및 역할', { exact: false })).toHaveValue(
+    '사용자 조사를 맡았습니다.\n문의가 줄었습니다.',
+  );
+  await page.getByLabel('프로젝트·활동 명칭', { exact: false }).fill('지역 안내 개선 프로젝트');
+
+  // 예전 '내 경험' 주소는 쓰기 화면으로 이동
+  await page.goto('/experience');
+  await expect(page).toHaveURL(/cover-letter/);
+  await expect(page.getByRole('region', { name: '내 경험' }).getByLabel('경험 제목')).toHaveValue(
+    '지역 안내 개선 프로젝트',
+  );
+});
+
+test('interview also starts from the posting and its step bar leads to practice', async ({
+  page,
+}) => {
+  await noNotices(page);
+  await page.goto('/home');
+  await page.getByRole('button', { name: '면접 준비' }).click();
+  await expect(page).toHaveURL(/application/);
+  await expect(page.getByText('현재 작업 · 면접 준비', { exact: true })).toBeVisible();
+  await page
+    .getByLabel('채용공고 원문')
+    .fill('회사명: 이음기획\n직무: 서비스 기획\n주요 업무: 사용자 조사\n자격요건: 협업 경험');
+  await page.getByRole('button', { name: '명시된 항목 가져오기' }).click();
+  await page.getByLabel('필수 지원 정보를 원문과 비교해 확인했어요.').check();
+  await page.getByRole('button', { name: '면접 연습 시작하기' }).click();
+  await expect(page).toHaveURL(/interview/);
+  await expect(page.locator('.side-panel')).toContainText('이음기획 · 서비스 기획');
+  await page
+    .getByRole('navigation', { name: '면접 준비 단계' })
+    .getByRole('link', { name: '지원 정보' })
+    .click();
+  await expect(page.getByText('현재 작업 · 면접 준비', { exact: true })).toBeVisible();
+});

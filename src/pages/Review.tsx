@@ -29,7 +29,7 @@ export function Review() {
   return (
     <>
       <PageTitle
-        step="04 · FINAL CHECK"
+        step="03 · FINAL CHECK"
         title="다음으로 나아갈 준비, 마지막 한 번."
         description="담이와 함께 이야기를 살펴보고, 완성된 파일을 저장하세요."
       />
@@ -91,7 +91,7 @@ export function Review() {
                 onClick={() =>
                   nav(
                     i === 1
-                      ? '/experience'
+                      ? '/cover-letter'
                       : i === 2
                         ? '/application'
                         : `/cover-letter?question=${work.letters[0].id}`,
