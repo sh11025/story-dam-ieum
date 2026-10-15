@@ -2408,3 +2408,14 @@ dialog::backdrop {
 .link-actions .fine-print {
   margin: 0 0 4px;
 }
+
+/* 첫 화면: 왼쪽 위 로고와 큰 제목이 겹치지 않게, 제목은 항상 로고 아래에서 시작 (2026-10-15)
+   로고는 위에서 6%(화면 높이) + 높이 약 47px 자리에 있어요. */
+.login-copy {
+  padding-top: max(16%, calc(6vh + 72px));
+}
+@media (max-width: 800px) {
+  .login-copy {
+    padding-top: max(12%, 88px);
+  }
+}
