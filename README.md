@@ -13,7 +13,7 @@
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?logo=typescript&logoColor=white)
 ![Node.js](https://img.shields.io/badge/Node.js-22-5FA04E?logo=nodedotjs&logoColor=white)
 ![Render](https://img.shields.io/badge/배포-Render-46E3B7?logo=render&logoColor=white)
-![Tests](https://img.shields.io/badge/자동_테스트-57개_통과-2E7D6B)
+![Tests](https://img.shields.io/badge/자동_테스트-60개-2E7D6B)
 
 <img src="docs/images/01-start.png" width="860" alt="스토리 담 이음 첫 화면: 담이가 책을 읽고 있고, 오른쪽에 체험 시작하기 버튼" />
 
@@ -32,6 +32,7 @@
 | ✍️ | **자기소개서** | 쓰는 화면 바로 옆에서 '내 경험'을 정리하고, **본문에 넣기**로 바로 옮겨요. 문항별 글자 수(공백 포함·제외·바이트)를 세어 줘요. |
 | 🔗 | **이력서 자동 연결** | 자기소개서에 정리한 경험이 이력서 '프로젝트·활동/경력'에 **저절로** 들어가요. 한쪽에서 고치면 다른 쪽도 함께 바뀌어요. |
 | 🎤 | **면접 연습** | 공고를 바탕으로 기본 질문 5개에 답하고, 정리한 경험을 옆에 띄워 놓고 연습해요. |
+| 🤖 | **AI 도움 (선택)** | 내 API 키를 넣으면 문장 다듬기·면접 추가 질문·공고 읽기를 AI가 도와줘요. Claude·Gemini·ChatGPT 중 고르고, 회사마다 **균형형 / 가장 똑똑함 / 빠르고 저렴** 모델을 고르거나 새 모델 이름을 직접 넣을 수 있어요. |
 | 📄 | **내보내기** | 워드(DOCX)·PDF로 저장하고, 작업 전체는 `.sdi` 파일로 보관·불러오기 해요. |
 | 🗂️ | **지원서 여러 개** | 회사별로 지원서를 따로 만들고 마감일 D-day를 보여 줘요. |
 | 🔒 | **내 기기에만 저장** | 작성한 글은 **서버에 저장하지 않아요.** 브라우저와 내가 내려받은 파일에만 남아요. |
@@ -220,7 +221,7 @@ npm run dev          # http://127.0.0.1:5173
 | --- | --- |
 | `npm run typecheck` | 코드 형식 오류 확인 |
 | `npm run lint` | 코드 규칙 확인 |
-| `npm test` | 자동 테스트 57개 (처음 한 번: `npx playwright install chromium`) |
+| `npm test` | 자동 테스트 60개 (처음 한 번: `npx playwright install chromium`) |
 | `npm run build` | 배포용 파일 만들기 (`dist/`, `dist-server/`) |
 | `npm start` | 만든 배포용 파일로 서버 실행 (http://localhost:3000) |
 | `npm run check:job -- 주소…` | 실제 채용공고를 가져올 수 있는지 시험 (`urls.txt`처럼 주소 목록 파일도 가능, 결과는 `test-results/job-check.md`) |
@@ -278,6 +279,7 @@ docs/                개발 기록, 디자인 안내, README 화면 캡처
 
 | 날짜 | 주요 변경 |
 | --- | --- |
+| 2026-10-15 | AI 설정에서 회사별 모델 고르기(균형형·가장 똑똑함·빠르고 저렴 + 직접 입력), README 새로 씀, 첫 화면 로고·제목 겹침 수정 |
 | 2026-10-15 | 자기소개서·면접은 공고부터 시작, '내 경험'을 쓰기 화면에 합침, 경험↔이력서 자동 연결, 실제 공고 9개로 사이트별 맞춤 처리, Render 배포 |
 | 2026-10-15 | 지원서 여러 개, 백업 알림, 글자 수 세는 방법, 마감일 D-day, 새 공지 표시, AI로 공고 읽기 |
 | 2026-10-14 | 사용자 사이트(Render)와 관리자 화면(깃허브 페이지) 분리, 서버를 Node 하나로 단순화, 코드 정리 |
