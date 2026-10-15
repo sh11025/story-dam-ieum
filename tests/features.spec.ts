@@ -372,6 +372,15 @@ test('interview also starts from the posting and its step bar leads to practice'
   await page.getByRole('button', { name: '면접 준비' }).click();
   await expect(page).toHaveURL(/application/);
   await expect(page.getByText('현재 작업 · 면접 준비', { exact: true })).toBeVisible();
+  // 같은 지원 정보 화면이어도 지금 하는 작업 하나만 선택 표시
+  const taskNav = page.getByRole('navigation', { name: '다른 작업으로 이동' });
+  await expect(taskNav.locator('a.active')).toHaveText(['면접 준비']);
+  await expect(taskNav.locator('[aria-current="page"]')).toHaveText(['면접 준비']);
+  await taskNav.getByRole('link', { name: '자기소개서' }).click();
+  await expect(taskNav.locator('a.active')).toHaveText(['자기소개서']);
+  await expect(page.getByText('현재 작업 · 자기소개서 작성', { exact: true })).toBeVisible();
+  await taskNav.getByRole('link', { name: '면접 준비' }).click();
+  await expect(taskNav.locator('a.active')).toHaveText(['면접 준비']);
   await page
     .getByLabel('채용공고 원문')
     .fill('회사명: 이음기획\n직무: 서비스 기획\n주요 업무: 사용자 조사\n자격요건: 협업 경험');

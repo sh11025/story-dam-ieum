@@ -119,15 +119,17 @@ export default function App() {
             <div className="work-navigation">
               <nav className="work-task-nav" aria-label="다른 작업으로 이동">
                 {TASK_MENU.map((kind) => (
-                  <NavLink
+                  // 자기소개서·면접 준비는 같은 지원 정보 화면에서 시작해, 주소만으로 고르면 둘 다 선택돼 보입니다.
+                  // 그래서 NavLink 대신 Link를 쓰고, 지금 하는 작업 하나만 선택 표시합니다.
+                  <Link
                     key={kind}
                     to={kindStartPath[kind]}
-                    className={taskKind === kind ? 'active' : ''}
+                    className={taskKind === kind ? 'active' : undefined}
                     aria-current={taskKind === kind ? 'page' : undefined}
                     onClick={() => startTask(kind)}
                   >
                     {kindNames[kind]}
-                  </NavLink>
+                  </Link>
                 ))}
               </nav>
               {TASK_STEPS[taskKind] && (
