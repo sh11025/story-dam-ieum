@@ -1,16 +1,21 @@
 import { useEffect, useState } from 'react';
 import type { JobFields } from '../shared/jobPosting';
 import type { FaqItem, NoticeItem } from '../shared/notices';
+import { defaultAiModel, type AiProvider } from '../shared/aiModels';
 // The personal provider key exists only in this module's memory. No work or secret is persisted.
-type AiProvider = 'Gemini' | 'ChatGPT' | 'Claude';
-let aiSession: { provider: AiProvider; key: string } = { provider: 'ChatGPT', key: '' };
+// model: AI 설정 창에서 고른 모델 이름 (키와 마찬가지로 이 탭 메모리에만)
+let aiSession: { provider: AiProvider; key: string; model: string } = {
+  provider: 'ChatGPT',
+  key: '',
+  model: defaultAiModel('ChatGPT'),
+};
 let revisionPending = false;
 let connectionTestPending = false;
 const unavailableMessage =
   '외부 AI가 연결되지 않았습니다. 안전한 서버 프록시를 설정한 후 다시 시도해 주세요. 원문은 그대로 유지됩니다.';
 const aiListeners = new Set<() => void>();
-export function configureAiSession(provider: AiProvider, key: string) {
-  aiSession = { provider, key };
+export function configureAiSession(provider: AiProvider, key: string, model: string) {
+  aiSession = { provider, key, model: model.trim() };
   aiListeners.forEach((l) => l());
 }
 /** 화면에서 "AI 키가 있는지"를 쓰면, 키를 넣거나 지울 때 화면이 다시 그려집니다. */
@@ -36,7 +41,8 @@ type AiErrorType =
   | 'malformed_response'
   | 'bad_request'
   | 'unauthorized'
-  | 'config_required';
+  | 'config_required'
+  | 'model_unavailable';
 const aiErrorMessages: Record<AiErrorType, string> = {
   invalid_key: 'API 키를 확인해 주세요.',
   rate_limit: 'AI 요청이 잠시 많습니다. 잠시 후 다시 시도해 주세요.',
@@ -47,6 +53,8 @@ const aiErrorMessages: Record<AiErrorType, string> = {
   bad_request: '전송할 내용을 확인해 주세요.',
   unauthorized: 'AI 연결을 확인하지 못했습니다. API 키를 다시 확인해 주세요.',
   config_required: unavailableMessage,
+  model_unavailable:
+    '선택한 모델을 쓸 수 없어요. 모델 이름이 바뀌었거나 이 키로 쓸 수 없는 모델일 수 있어요. AI 설정에서 다른 모델을 골라 주세요.',
 };
 async function aiProxy(
   task: 'test' | 'revision' | 'experience' | 'resume' | 'interview-answer' | 'interview-questions',
@@ -61,7 +69,13 @@ async function aiProxy(
     response = await fetch('/api/ai', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ provider: aiSession.provider, key: aiSession.key, task, ...payload }),
+      body: JSON.stringify({
+        provider: aiSession.provider,
+        key: aiSession.key,
+        model: aiSession.model,
+        task,
+        ...payload,
+      }),
       signal,
       cache: 'no-store',
     });
@@ -222,7 +236,12 @@ export async function fetchJobPostingWithAi(
     response = await fetch('/api/job-posting/ai', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ url, provider: aiSession.provider, key: aiSession.key }),
+      body: JSON.stringify({
+        url,
+        provider: aiSession.provider,
+        key: aiSession.key,
+        model: aiSession.model,
+      }),
       cache: 'no-store',
     });
   } catch (error) {

@@ -289,3 +289,57 @@ test('hidden-text rule does not mistake table borders for hidden text', () => {
   expect(r.text).toContain('보이는 내용입니다');
   expect(r.text).not.toContain('숨긴 검색어');
 });
+
+// 2026-10-15: AI 설정 창에서 고른 모델을 AI 회사에 그대로 보내고, 안 고르면 기본(균형형) 모델을 씀
+test('AI requests use the chosen model, fall back to the default, and explain a retired model', async () => {
+  const real = globalThis.fetch;
+  const sent: { url: string; body: Record<string, unknown> }[] = [];
+  let status = 200;
+  globalThis.fetch = (async (url: string | URL | Request, init?: RequestInit) => {
+    sent.push({ url: String(url), body: JSON.parse(String(init?.body ?? '{}')) });
+    if (status !== 200) return new Response('{}', { status });
+    return Response.json({ content: [{ type: 'text', text: 'OK' }] });
+  }) as typeof fetch;
+  try {
+    const app = createApp();
+    const ask = (body: Record<string, unknown>) =>
+      post(app, '/api/ai', { provider: 'Claude', task: 'test', key: 'k', ...body }).then((r) =>
+        r.json(),
+      );
+    expect(await ask({ model: 'claude-opus-5-5' })).toEqual({ success: true, content: 'OK' });
+    expect(sent.at(-1)!.body.model).toBe('claude-opus-5-5');
+    await ask({});
+    expect(sent.at(-1)!.body.model).toBe('claude-sonnet-5-5'); // 기본(균형형)
+    await ask({ model: 'my-new-model-2027' }); // 목록에 없어도 형식만 맞으면 그대로
+    expect(sent.at(-1)!.body.model).toBe('my-new-model-2027');
+
+    const count = sent.length;
+    expect(await ask({ model: '../../evil?x=1' })).toEqual({
+      success: false,
+      error: { type: 'bad_request' },
+    });
+    expect(sent.length).toBe(count); // 이상한 이름은 AI 회사로 보내지 않음
+
+    // 서버 설정이 있으면, 사용자가 고르지 않았을 때 그 모델
+    const configured = createApp({ aiModels: { gemini: 'gemini-3.6-flash' } });
+    status = 404;
+    const res = await post(configured, '/api/ai', { provider: 'Gemini', task: 'test', key: 'k' });
+    expect(sent.at(-1)!.url).toContain('/models/gemini-3.6-flash:generateContent');
+    expect(await res.json()).toEqual({ success: false, error: { type: 'model_unavailable' } });
+
+    const health = await (await app.request('http://app.test/api/health')).json();
+    expect(health.ai).toEqual({ ChatGPT: true, Gemini: true, Claude: true });
+  } finally {
+    globalThis.fetch = real;
+  }
+});
+
+test('the model list has three choices per AI and only safe names pass', async () => {
+  const { AI_MODELS, AI_PROVIDERS, isValidModelName } = await import('../shared/aiModels.ts');
+  for (const p of AI_PROVIDERS) {
+    expect(AI_MODELS[p].map((m) => m.note)).toEqual(['균형형', '가장 똑똑함', '빠르고 저렴']);
+    for (const m of AI_MODELS[p]) expect(isValidModelName(m.id)).toBe(true);
+  }
+  for (const bad of ['', ' x', '../x', 'a b', 'x?y', 'a'.repeat(81)])
+    expect(isValidModelName(bad)).toBe(false);
+});

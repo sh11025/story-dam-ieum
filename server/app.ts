@@ -93,10 +93,13 @@ export function createApp(options: AppOptions = {}) {
     c.json({
       ok: true,
       noticesConfigured: !!options.noticesUrl,
-      ai: {
-        ChatGPT: !!options.aiModels?.openai,
-        Gemini: !!options.aiModels?.gemini,
-        Claude: !!options.aiModels?.claude,
+      // 사용자가 AI 설정 창에서 모델을 고르고, 안 고르면 기본 모델을 쓰므로 세 AI 모두 항상 쓸 수 있어요.
+      // models: 서버 설정(AI_*_MODEL)으로 기본 모델을 바꿨으면 그 이름, 아니면 '기본'
+      ai: { ChatGPT: true, Gemini: true, Claude: true },
+      models: {
+        ChatGPT: options.aiModels?.openai || '기본',
+        Gemini: options.aiModels?.gemini || '기본',
+        Claude: options.aiModels?.claude || '기본',
       },
     }),
   );

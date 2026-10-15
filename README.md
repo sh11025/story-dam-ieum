@@ -189,6 +189,18 @@ flowchart TB
 
 - 서버는 **공지 읽기 · 공고 받아 오기 · AI 요청 전달** 세 가지만 하고, 아무것도 저장하지 않아요.
 - 개인 AI 키는 브라우저 탭 메모리에만 있고, 새로고침하면 사라져요.
+
+### 🤖 고를 수 있는 AI 모델
+
+오른쪽 위 ⚙️ **AI 설정**에서 AI 회사, 모델, 내 API 키를 넣어요. 모델 목록은 [`shared/aiModels.ts`](shared/aiModels.ts) 한 파일에 모여 있어서, 이름이 바뀌면 그 파일만 고치면 돼요. 목록에 없는 모델은 **직접 입력**으로 쓸 수 있어요.
+
+| AI | 균형형 (기본) | 가장 똑똑함 | 빠르고 저렴 |
+| --- | --- | --- | --- |
+| Claude | `claude-sonnet-5-5` | `claude-opus-5-5` | `claude-haiku-5-5` |
+| Gemini | `gemini-3.8-flash` | `gemini-4-argon` | `gemini-3.5-flash-lite` |
+| ChatGPT | `gpt-6.1-sol` | `gpt-6-astra` | `gpt-6-luna` |
+
+<sub>2026-10-15 각 회사 공식 문서 기준. 요금은 모델마다 다르고, 사용한 만큼 각 AI 회사가 키 주인에게 청구해요.</sub>
 - 공지는 별도 폴더(`admin-app`)의 관리자 화면에서 쓰고, 그 저장소의 `data/notices.json`에 저장돼요.
 
 <br />
@@ -224,7 +236,7 @@ npm run dev          # http://127.0.0.1:5173
    | 이름 | 값 |
    | --- | --- |
    | `NOTICES_URL` | 관리자 화면 아래 "사용자 사이트 연결"에 나오는 공지 파일 주소 |
-   | `AI_OPENAI_MODEL` · `AI_GEMINI_MODEL` · `AI_CLAUDE_MODEL` | (선택) AI 첨삭·공고 읽기에 쓸 모델 이름 |
+   | `AI_OPENAI_MODEL` · `AI_GEMINI_MODEL` · `AI_CLAUDE_MODEL` | (선택) 기본 모델을 바꾸고 싶을 때만. 비우면 위 표의 균형형 모델을 써요 |
 
 4. 이후에는 깃허브에 `git push`하면 Render가 자동으로 다시 배포해요.
 
@@ -252,7 +264,7 @@ server/              Render에서 돌아가는 서버
 ├─ jobPage.ts          공고 페이지에서 글·항목 뽑기 (사이트별 맞춤 처리 포함)
 ├─ safeFetch.ts        안전하게 페이지 받아 오기
 └─ ai.ts               AI 요청 전달
-shared/              화면과 서버가 같이 쓰는 규칙 (공고 항목 찾기, 공지 형식)
+shared/              화면과 서버가 같이 쓰는 규칙 (공고 항목 찾기, 공지 형식, AI 모델 목록)
 scripts/check-job.ts 실제 공고 가져오기 시험 도구
 tests/               자동 테스트 (화면 · 서버 · 경험 연결 · 시험용 공고 페이지)
 docs/                개발 기록, 디자인 안내, README 화면 캡처

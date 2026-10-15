@@ -395,3 +395,50 @@ test('interview also starts from the posting and its step bar leads to practice'
     .click();
   await expect(page.getByText('현재 작업 · 면접 준비', { exact: true })).toBeVisible();
 });
+
+test('AI settings let the user pick a model per AI or type a new one, and requests carry it', async ({
+  page,
+}) => {
+  await noNotices(page);
+  const bodies: Record<string, unknown>[] = [];
+  await page.route('**/api/ai', async (route) => {
+    bodies.push(route.request().postDataJSON());
+    await route.fulfill({ json: { success: true, content: 'OK' } });
+  });
+  await page.goto('/home');
+  await page.getByRole('button', { name: 'AI 설정', exact: true }).click();
+  const dialog = page.getByRole('dialog');
+  await dialog.getByRole('button', { name: 'Claude', exact: true }).click();
+  const model = dialog.getByLabel('모델', { exact: true });
+  await expect(model.locator('option')).toHaveText([
+    'Claude Sonnet 5.5 · 균형형',
+    'Claude Opus 5.5 · 가장 똑똑함',
+    'Claude Haiku 5.5 · 빠르고 저렴',
+    '직접 입력 (목록에 없는 모델)',
+  ]);
+  await model.selectOption({ label: 'Claude Opus 5.5 · 가장 똑똑함' });
+  await dialog.getByLabel('API Key', { exact: true }).fill('test-key');
+  await dialog.getByRole('button', { name: '연결 확인', exact: true }).click();
+  await expect(dialog.getByText('AI 연결을 확인했습니다.')).toBeVisible();
+  expect(bodies.at(-1)).toMatchObject({ provider: 'Claude', model: 'claude-opus-5-5' });
+
+  // 다른 AI로 바꿨다 돌아와도 고른 모델이 남아 있음
+  await dialog.getByRole('button', { name: 'Gemini', exact: true }).click();
+  await expect(model).toHaveValue('gemini-3.8-flash');
+  await dialog.getByRole('button', { name: 'Claude', exact: true }).click();
+  await expect(model).toHaveValue('claude-opus-5-5');
+
+  // 목록에 없는 새 모델은 직접 입력
+  await model.selectOption({ label: '직접 입력 (목록에 없는 모델)' });
+  await dialog.getByLabel('모델 이름 직접 입력').fill('claude-new-model-2027');
+  await dialog.getByRole('button', { name: '연결 확인', exact: true }).click();
+  await expect(dialog.getByText('AI 연결을 확인했습니다.')).toBeVisible();
+  expect(bodies.at(-1)).toMatchObject({ model: 'claude-new-model-2027' });
+
+  // 형식에 안 맞는 이름은 안내하고 기본 모델로 보냄
+  await dialog.getByLabel('모델 이름 직접 입력').fill('bad model?');
+  await expect(dialog.getByRole('alert')).toContainText('영문·숫자');
+  await dialog.getByRole('button', { name: '연결 확인', exact: true }).click();
+  await expect(dialog.getByText('AI 연결을 확인했습니다.')).toBeVisible();
+  expect(bodies.at(-1)).toMatchObject({ model: 'claude-sonnet-5-5' });
+});

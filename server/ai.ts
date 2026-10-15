@@ -1,11 +1,29 @@
 // 사용자가 입력한 개인 AI 키로 AI 회사에 요청을 대신 보내는 부분입니다.
 // 키는 요청 한 번에만 쓰고 저장하거나 기록하지 않습니다.
 import { obj, type Json } from './json.ts';
+import {
+  AI_PROVIDERS,
+  defaultAiModel,
+  isValidModelName,
+  type AiProvider,
+} from '../shared/aiModels.ts';
 
 export type AiModels = { openai?: string; gemini?: string; claude?: string };
 type AiResult = { ok: true; content: string } | { ok: false; type: string };
 
-const PROVIDERS = ['ChatGPT', 'Gemini', 'Claude'];
+const PROVIDERS: string[] = AI_PROVIDERS;
+
+/**
+ * 쓸 모델 고르기: 사용자가 AI 설정 창에서 고른 모델 → 서버 설정(AI_*_MODEL) → 기본 모델(균형형).
+ * 사용자가 보낸 이름이 형식에 맞지 않으면 null(요청 거절).
+ */
+function pickModel(provider: string, requested: unknown, models: AiModels): string | null {
+  const name = typeof requested === 'string' ? requested.trim() : '';
+  if (name) return isValidModelName(name) ? name : null;
+  const configured =
+    provider === 'ChatGPT' ? models.openai : provider === 'Gemini' ? models.gemini : models.claude;
+  return configured || defaultAiModel(provider as AiProvider);
+}
 const TASKS = [
   'test',
   'revision',
@@ -32,9 +50,8 @@ export async function callAi(body: Json, models: AiModels, signal: AbortSignal):
     instruction.length > 4000
   )
     return { ok: false, type: 'bad_request' };
-  const model =
-    provider === 'ChatGPT' ? models.openai : provider === 'Gemini' ? models.gemini : models.claude;
-  if (!model) return { ok: false, type: 'config_required' };
+  const model = pickModel(provider, body.model, models);
+  if (!model) return { ok: false, type: 'bad_request' };
 
   const prompt =
     task === 'test'
@@ -118,7 +135,9 @@ async function sendToProvider(r: ProviderRequest, signal: AbortSignal): Promise<
             ? 'invalid_key'
             : res.status === 429
               ? 'rate_limit'
-              : 'unavailable',
+              : res.status === 404 || res.status === 400
+                ? 'model_unavailable'
+                : 'unavailable',
       };
     const data = obj(await res.json().catch(() => null));
     const texts = (list: unknown) =>
@@ -219,9 +238,8 @@ export async function callAiJobPosting(
     url.length > 2048
   )
     return { ok: false, type: 'bad_request' };
-  const model =
-    provider === 'ChatGPT' ? models.openai : provider === 'Gemini' ? models.gemini : models.claude;
-  if (!model) return { ok: false, type: 'config_required' };
+  const model = pickModel(provider, body.model, models);
+  if (!model) return { ok: false, type: 'bad_request' };
   const prompt =
     `다음 채용공고 페이지를 읽어 주세요: ${url}\n\n` +
     '아래 모양의 JSON 하나만 답하세요. 각 값은 페이지에 적힌 문장을 그대로(목록은 줄바꿈으로) 옮기세요.\n' +
